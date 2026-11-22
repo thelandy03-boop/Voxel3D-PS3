@@ -1,0 +1,40 @@
+# Compilación y binarios PS3
+*.o
+*.obj
+*.sprx
+*.prx
+*.elf
+*.self
+*.fself
+build/
+bin/
+
+# Entornos y volcados de depuración
+*.log
+*.dmp
+*.core
+*.dump
+
+# Herramientas de ingeniería inversa
+*.i64
+*.idb
+*.nam
+*.til
+*.gzf
+*.rep/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# IDEs y SO
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
