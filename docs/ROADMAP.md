@@ -50,7 +50,7 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 ### Fase 1: Pipeline Offline de Conversión de Mallas
 * [ ] **1.1. Estructura de Cabecera y Vértice:** Definición C++ de `VX3Header` y `VoxelVertex` en [`voxel3d.h`](../sprx/include/voxel3d.h).
 * [ ] **1.2. Parser de MagicaVoxel (.vox):** Script para leer archivo binario `.vox` y extraer paletas y vóxeles.
-* [ ] **1.3. Parser de Blockbench (.bbmodel / JSON):** Módulo de importación de mallas cúbicas.
+* [~] **1.3. Scaffolding y Extracción CLI:** Herramienta de transpilación en [`tools/converter/extract_crayfish_data.py`](../tools/converter/extract_crayfish_data.py).
 * [ ] **1.4. Algoritmo Greedy Meshing:** Eliminación de caras internas ocultas y fusión de polígonos.
 * [ ] **1.5. Empaquetador Binario (.vx3):** Generación de archivo final con alineación de 128 bytes para RSX.
 
@@ -76,7 +76,7 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 * [ ] **4.5. Efecto Visual de Muzzle Flash:** Renderizado del destello de disparo en las coordenadas del cañón.
 
 ### Fase 5: Sistema Data-Driven y Release v1.0
-* [ ] **5.1. Lector Embebido de JSON:** Parser ligero en C++ para leer `config.json` en PS3 vía CellFS.
+* [x] **5.1. Generación de Presets y Configuración:** Transpilación de matrices de MrCrayfish hacia [`crayfish_config.json`](../models/crayfish_config.json) y [`crayfish_transforms.h`](../sprx/include/crayfish_transforms.h).
 * [ ] **5.2. Tabla de Búsqueda O(1):** Indexación en memoria XDR para resolución inmediata de armas sin alocaciones dinámicas.
 * [ ] **5.3. Pruebas de Estabilidad Prolongadas:** Sesiones continuas de 2 horas sin caídas de framerate ni fugas de memoria.
 * [ ] **5.4. Soporte Multi-Región:** Validación de compatibilidad con versiones BLES01976 y NPUB31419.
