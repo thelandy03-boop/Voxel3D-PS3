@@ -62,11 +62,11 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 * [ ] **2.5. Inyección Limpia en Runtime:** Prueba de intercepción en RPCS3 sin congelar el hilo principal.
 
 ### Fase 3: Pipeline de Renderizado RSX de Bajo Nivel
-* [ ] **3.1. Adquisición del Contexto GCM:** Captura del puntero global `CellGcmContextData` del motor de 4J.
-* [ ] **3.2. Reserva del Pool en VRAM:** Alocación del bloque de 4 MB en memoria local GDDR3 (`CELL_GCM_LOCATION_LOCAL`).
-* [ ] **3.3. Configuración de Vertex Data Arrays:** Enlace de los 4 canales de atributos RSX con `cellGcmAddressToOffset()`.
-* [ ] **3.4. Emisión de Draw Call Indexado:** Llamada a `cellGcmSetDrawIndexArray()` para dibujar la malla vóxel.
-* [ ] **3.5. Preservación del Rasterizador:** Guardado y restauración estricta de Depth, Alpha y Culling sin fugas de estado.
+* [x] **3.1. Adquisición del Contexto GCM:** Captura del puntero global `CellGcmContextData` del motor de 4J.
+* [x] **3.2. Reserva del Pool en VRAM:** Alocación del bloque de 4 MB en memoria local GDDR3 (`CELL_GCM_LOCATION_LOCAL`).
+* [x] **3.3. Configuración de Vertex Data Arrays:** Enlace de los 4 canales de atributos RSX con `cellGcmAddressToOffset()`.
+* [x] **3.4. Emisión de Draw Call Indexado:** Llamada a `cellGcmSetDrawIndexArray()` para dibujar la malla vóxel.
+* [x] **3.5. Preservación del Rasterizador:** Guardado y restauración estricta de Depth, Alpha y Culling sin fugas de estado.
 
 ### Fase 4: Cinemática, Apuntado (ADS) y Retroceso LERP
 * [ ] **4.1. Transformaciones Espaciales:** Multiplicación de matriz del modelo vóxel con la matriz de la mano del jugador.

@@ -7,7 +7,7 @@
 <rect x="186.0" y="16" width="68.4" height="24" fill="#555b63"/>
 <rect x="254.4" y="16" width="66.0" height="24" fill="#b08a1e"/>
 <text x="195.0" y="32.5" font-size="12" font-weight="600" fill="#fff">roadmap</text>
-<text x="263.4" y="32.5" font-size="12" font-weight="600" fill="#fff">33.3%</text>
+<text x="263.4" y="32.5" font-size="12" font-weight="600" fill="#fff">50.0%</text>
 <text x="16.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">System Architecture: 100.0% (13/13)</text>
 <rect x="16.0" y="84.0" width="116.8" height="109.4" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="132.8" y="84.0" width="116.8" height="109.4" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
@@ -28,7 +28,7 @@
 <rect x="444.2" y="281.0" width="77.8" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="366.3" y="84.0" width="155.7" height="394.0" fill="none" stroke="#10141a" stroke-width="2"/>
 <text x="371.3" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.2. GPU RSX, Memori…</text>
-<text x="538.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">Implementation Roadmap: 33.3% (10/30)</text>
+<text x="538.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">Implementation Roadmap: 50.0% (15/30)</text>
 <rect x="538.0" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="601.2" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="664.5" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
@@ -50,11 +50,11 @@
 <rect x="538.0" y="412.3" width="253.0" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="538.0" y="346.7" width="253.0" height="131.3" fill="none" stroke="#10141a" stroke-width="2"/>
 <text x="543.0" y="360.7" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">Fase 2</text>
-<rect x="791.0" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="854.2" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="917.5" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="980.8" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="791.0" y="149.7" width="253.0" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="791.0" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="854.2" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="917.5" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="980.8" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="791.0" y="149.7" width="253.0" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="791.0" y="84.0" width="253.0" height="131.3" fill="none" stroke="#10141a" stroke-width="2"/>
 <text x="796.0" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">Fase 3</text>
 <rect x="791.0" y="215.3" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>

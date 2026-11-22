@@ -6,6 +6,7 @@
 #include "voxel3d.h"
 #include "hook.h"
 #include "netlogger.h"
+#include "rsx_pipeline.h"
 #include "crayfish_transforms.h"
 #include <stdint.h>
 
@@ -37,13 +38,17 @@ void hook_renderItemInFirstPerson(void* itemRendererInstance, float partialTicks
     t_renderItemInFirstPerson originalFunc = 
         (t_renderItemInFirstPerson)(void*)g_item_renderer_hook.trampoline_buffer;
 
-    // TODO (Fase 3): Inspeccionar ItemStack en la mano activa del jugador.
-    // Si el ítem es un arma registrada (pistol, rifle, etc.):
-    //   -> Ejecutar pipeline RSX con malla .vx3 y transformaciones Crayfish.
-    // Si no es un arma vóxel:
-    //   -> Ceder control a la función original sin alterar el pipeline.
-    
-    if (originalFunc) {
+    // 2. Comprobar si existe un modelo 3D registrado para el slot actual
+    // Si g_gcm_context está disponible y el arma vóxel se dibuja con éxito:
+    bool drawn = false;
+    if (g_gcm_context) {
+        // ID de prueba: 1 (ej. Pistol)
+        // Si el modelo está cargado en VRAM, emitir Draw Call RSX
+        drawn = rsx_draw_voxel_model(g_gcm_context, 1, nullptr);
+    }
+
+    // 3. Si no se renderizó modelo vóxel (ítem estándar o fallback seguro):
+    if (!drawn && originalFunc) {
         originalFunc(itemRendererInstance, partialTicks);
     }
 }
@@ -54,6 +59,12 @@ extern "C" {
         // Inicializar telemetría UDP (IP por defecto para pruebas en RPCS3 o red local)
         netlog_init("127.0.0.1", 3000);
         netlog_info("Inicializando Voxel3D-PS3 SPRX plugin...");
+
+        // Inicializar el pool estático de 4 MB en VRAM GDDR3 del RSX
+        if (!rsx_init_vram_pool()) {
+            netlog_error("Fallo al reservar pool de VRAM para RSX.");
+            return -1;
+        }
 
         // Inicializar el hook PPU en ItemRenderer
         bool success = install_ppu_hook(
@@ -79,6 +90,9 @@ extern "C" {
             uninstall_ppu_hook(&g_item_renderer_hook);
             netlog_info("PPU Hook desinstalado. Memoria original restaurada.");
         }
+
+        // Liberar el pool de memoria VRAM RSX
+        rsx_free_vram_pool();
 
         netlog_info("Voxel3D-PS3 finalizado.");
         netlog_close();
