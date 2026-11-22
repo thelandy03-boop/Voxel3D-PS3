@@ -251,13 +251,23 @@ def inspect_vx3(file_path: Path):
             print("Error: Corrupted file, smaller than 16-byte VX3 header.")
             sys.exit(1)
 
-        magic, version, flags, v_count, i_count = struct.unpack(HEADER_FORMAT, header_data)
+        fmt = HEADER_FORMAT
+        magic, version, flags, v_count, i_count = struct.unpack(fmt, header_data)
+        endian = "Little-Endian"
+        v_size = VERTEX_SIZE
+
+        if version > 255:  # Detect Big-Endian encoding (from Cell PPU / tools/obj_to_vx3.py)
+            fmt = ">4sHHII"
+            magic, version, flags, v_count, i_count = struct.unpack(fmt, header_data)
+            endian = "Big-Endian (Cell PPU)"
+            actual_size = file_path.stat().st_size
+            v_size = 12 if (actual_size - HEADER_SIZE - i_count * 2) == v_count * 12 else VERTEX_SIZE
 
         if magic != VX3_MAGIC:
             print(f"Error: Invalid magic identifier '{magic}' (expected 'VX3D').")
             sys.exit(1)
 
-        expected_v_size = v_count * VERTEX_SIZE
+        expected_v_size = v_count * v_size
         expected_i_size = i_count * 2
         total_expected = HEADER_SIZE + expected_v_size + expected_i_size
         actual_size = file_path.stat().st_size
@@ -266,9 +276,9 @@ def inspect_vx3(file_path: Path):
         print(f"  VX3 Binary Inspector: {file_path.name}")
         print(f"{'='*50}")
         print(f" Magic Identifier:  {magic.decode('ascii')}")
-        print(f" Format Version:    {version}")
+        print(f" Format Version:    {version} ({endian})")
         print(f" Flags:             0x{flags:04X}")
-        print(f" Vertex Count:      {v_count} ({expected_v_size} bytes)")
+        print(f" Vertex Count:      {v_count} ({expected_v_size} bytes, {v_size}B/vert)")
         print(f" Index Count:       {i_count} ({i_count // 3} triangles, {expected_i_size} bytes)")
         print(f" Total File Size:   {actual_size} bytes ({actual_size / 1024:.2f} KB)")
         print(f" Status:            {'VALID & VERIFIED ✓' if actual_size >= total_expected else 'TRUNCATED ✗'}")

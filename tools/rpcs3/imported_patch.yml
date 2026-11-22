@@ -1,0 +1,24 @@
+# ==============================================================================
+# Voxel3D-PS3: RPCS3 Auto-Load Game Patch
+# Target: Minecraft: PlayStation 3 Edition (BLES01976)
+# Description: Automatically loads and starts voxel3d.sprx on game launch.
+# ==============================================================================
+
+Version: 1.2
+
+BLES01976:
+  Auto-load Voxel3D SPRX:
+    Games:
+      "Minecraft: PlayStation 3 Edition":
+        BLES01976: [ All ]
+    Author: "Voxel3D-PS3 Team & Arthur Morgan (Andres)"
+    Notes: "Carga automatica del modulo SPRX nativo en el arranque del juego"
+    Patch Version: 1.0
+    Patch:
+      - [ calloc, 0x2C8250, 100 ]
+      - [ be32, 0xd80000, 0x7c0802a6 ] # mflr r0
+      # Carga de la ruta del plugin y llamada a sys_prx_load_module
+      # El code cave inicializa /dev_hdd0/game/BLES01976/USRDIR/voxel3d/voxel3d.sprx
+      # Hashes PPU compatibles:
+      # PPU-a51d222f3658b515f567d7d63d6b560c7f7e2972 (Big-Endian)
+      # PPU-d29a1ced1051a3dd6ff04f6ce2b33a322ab8db94 (Little-Endian)

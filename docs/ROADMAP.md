@@ -41,11 +41,11 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 ## 2. Hitos de Implementación (Código / Binarios / Reversing)
 
 ### Fase 0: Ingeniería Inversa y Mapeo de Memoria
-* [ ] **0.1. Preparación de Herramientas:** Configuración de `scetool` y entorno Ghidra PPC para análisis del ejecutable.
-* [ ] **0.2. Descifrado de EBOOT.BIN:** Extracción de `EBOOT.ELF` desprotegido de Minecraft PS3 (Update 1.84).
-* [ ] **0.3. Localización de ItemRenderer:** Búsqueda y aislamiento de `ItemRenderer::renderItemInFirstPerson`.
-* [ ] **0.4. Extracción de Offsets:** Documentación de direcciones y vtables definitivas para BLES01976 / NPUB31419.
-* [ ] **0.5. Validación Dinámica en RPCS3:** Breakpoint verificado al cambiar de slot de ítem en la hotbar.
+* [x] **0.1. Preparación de Herramientas:** Configuración de `scetool` y entorno Ghidra PPC para análisis del ejecutable.
+* [x] **0.2. Descifrado de EBOOT.BIN:** Extracción de `EBOOT.ELF` desprotegido de Minecraft PS3 (Update 1.84).
+* [x] **0.3. Localización de ItemRenderer:** Búsqueda y aislamiento de `ItemRenderer::renderItemInFirstPerson` (`0x005DA890`).
+* [x] **0.4. Extracción de Offsets:** Documentación de direcciones y vtables definitivas para BLES01976 (`0x005DA890` / `0x0015D084`).
+* [x] **0.5. Validación Dinámica en RPCS3:** Breakpoint verificado al cambiar de slot de ítem en la hotbar.
 
 ### Fase 1: Pipeline Offline de Conversión de Mallas
 * [x] **1.1. Estructura de Cabecera y Vértice:** Definición C++ de `VX3Header` y `VoxelVertex` en [`voxel3d.h`](../sprx/include/voxel3d.h).
@@ -59,7 +59,7 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 * [x] **2.2. Esqueleto del Módulo PRX:** Entry points `voxel3d_prx_start` y `voxel3d_prx_stop` en [`main.cpp`](../sprx/src/main.cpp).
 * [x] **2.3. Inyector de Trampolín PPU:** Implementación en C++ de parcheo de memoria con `sys_dbg_write_process_memory`.
 * [x] **2.4. Telemetría UDP en Tiempo Real:** Integración del cliente NetLogger en el plugin para envío de logs.
-* [ ] **2.5. Inyección Limpia en Runtime:** Prueba de intercepción en RPCS3 sin congelar el hilo principal.
+* [x] **2.5. Inyección Limpia en Runtime:** Prueba de intercepción en RPCS3 sin congelar el hilo principal (`imported_patch.yml`).
 
 ### Fase 3: Pipeline de Renderizado RSX de Bajo Nivel
 * [x] **3.1. Adquisición del Contexto GCM:** Captura del puntero global `CellGcmContextData` del motor de 4J.

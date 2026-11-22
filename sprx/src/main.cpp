@@ -16,14 +16,15 @@
 #include "input_manager.h"
 #include "config_loader.h"
 #include "crayfish_transforms.h"
+#include "offsets.h"
 #include <stdint.h>
 #include <string.h>
 
 // Contexto global del hook de ItemRenderer
 static HookContext g_item_renderer_hook;
 
-// Offset tentativo para Minecraft PS3 Update 1.84 (BLES01976 / NPUB31419)
-#define MINECRAFT_RENDER_ITEM_ADDR 0x0045A120
+// Offset verificado para Minecraft PS3 Update 1.84 (BLES01976)
+#define MINECRAFT_RENDER_ITEM_ADDR VOX3_HOOK_RENDER_ITEM_FIRST_PERSON
 
 // Prototipo de la función original ItemRenderer::renderItemInFirstPerson
 typedef void (*t_renderItemInFirstPerson)(ItemRenderer* itemRendererInstance, float partialTicks);
@@ -49,6 +50,18 @@ void hook_renderItemInFirstPerson(ItemRenderer* itemRendererInstance, float part
         (t_renderItemInFirstPerson)(void*)g_item_renderer_hook.trampoline_buffer;
 
     bool voxel_model_drawn = false;
+
+    // Adquirir el puntero global CellGcmContextData de 4J Studios si aún no está asignado
+    if (!g_gcm_context) {
+#if defined(__CELLOS_LV2__) && !defined(VOXEL3D_HOST_BUILD)
+        CellGcmContextData** ppGcmGlobal = (CellGcmContextData**)VOX3_GCM_CONTEXT_GLOBAL;
+        if (ppGcmGlobal && *ppGcmGlobal) {
+            g_gcm_context = *ppGcmGlobal;
+            netlog_info("Contexto GCM capturado de global @0x%08X -> %p", 
+                        VOX3_GCM_CONTEXT_GLOBAL, g_gcm_context);
+        }
+#endif
+    }
 
     // 1. Validar si el motor de Minecraft está sosteniendo un ItemStack activo
     if (itemRendererInstance && itemRendererInstance->m_pItemToRender) {
