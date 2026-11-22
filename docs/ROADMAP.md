@@ -11,142 +11,102 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 >    * `* [~]` : Tarea iniciada / en progreso activo (**amarillo** / `started`).
 >    * `* [ ]` : Tarea pendiente (**gris** / `to do`).
 > 2. Ejecuta el comando: `python3 tools/generate_status_svg.py`
-> 3. El script regenera `docs/status.svg` y recalcula los porcentajes exactos sin datos ficticios.
+> 3. El script regenera `docs/status.svg` y recalcula los porcentajes exactos de manera automática.
 
 ---
 
-## 0. Especificaciones Técnicas y Arquitectura
+## 1. Módulos del Sistema y Arquitectura
 
-* [x] **0.A. Arquitectura del Sistema:** Especificación del hook y ciclo GCM en [`ARCHITECTURE.md`](ARCHITECTURE.md).
-* [x] **0.B. Formato Binario VX3:** Estructura de vértice comprimido de 12 bytes en [`VX3_FORMAT.md`](VX3_FORMAT.md).
-* [x] **0.C. Pipeline Gráfico RSX:** Gestión de contexto GCM, FIFO y shaders en [`RSX_PIPELINE.md`](RSX_PIPELINE.md).
-* [x] **0.D. Presupuestos de Memoria:** Alocación estática en VRAM GDDR3 y XDR en [`MEMORY_MANAGEMENT.md`](MEMORY_MANAGEMENT.md).
-* [x] **0.E. Hooking PPU Cell:** Trampolines absolutos de 16 bytes y flush de caché en [`PPU_HOOKING.md`](PPU_HOOKING.md).
-* [x] **0.F. Estructuras C++ 4J:** Mapeo de `ItemStack`, `ItemRenderer` y matrices en [`ENGINE_STRUCTURES.md`](ENGINE_STRUCTURES.md).
-* [x] **0.G. Configuración Data-Driven:** Esquema JSON para armas y retroceso en [`CONFIG_SPEC.md`](CONFIG_SPEC.md).
-* [x] **0.H. Toolchain y Telemetría:** Configuración PSL1GHT, RPCS3 y NetLogger UDP en [`DEBUG_AND_TOOLCHAIN.md`](DEBUG_AND_TOOLCHAIN.md).
-* [x] **0.I. Metodología de Reversing:** Guía para análisis en Ghidra/IDA Pro en [`REVERSE_ENGINEERING.md`](REVERSE_ENGINEERING.md).
+### 1.1. Reversing & Engine Internals
+* [x] **Configuración de herramientas:** Configuración de `scetool` y entorno Ghidra/IDA para Cell PPU en [`REVERSE_ENGINEERING.md`](REVERSE_ENGINEERING.md).
+* [x] **Identificación de clases objetivo:** Layouts C++ de `ItemStack`, `InventoryPlayer` y `ItemRenderer` en [`ENGINE_STRUCTURES.md`](ENGINE_STRUCTURES.md).
+* [x] **Mapeo de matrices del brazo:** Análisis de `renderFirstPersonArm` y pila de matrices en [`ARCHITECTURE.md`](ARCHITECTURE.md).
+* [~] **Descifrado de binario base:** Extracción y análisis del `EBOOT.ELF` desprotegido de Minecraft PS3 (Update 1.84).
+* [ ] **Localización de vtable offsets:** Extracción de offsets específicos para BLES01976 y NPUB31419.
+* [ ] **Aislamiento de la rama 2D:** Bypass de la extrusión de quads de sprites para ítems personalizados.
 
----
+### 1.2. Formato de Malla VX3 & Tooling
+* [x] **Estructura de Cabecera:** Cabecera binaria `VX3Header` (16 bytes) definida en [`VX3_FORMAT.md`](VX3_FORMAT.md) y [`voxel3d.h`](../sprx/include/voxel3d.h).
+* [x] **Layout de Vértice Compacto:** Estructura `VoxelVertex` (12 bytes con `int16_t` y normales empaquetadas).
+* [x] **Especificación de Optimización:** Algoritmos de *Greedy Meshing* y *Occlusion Face Culling* en [`VX3_FORMAT.md`](VX3_FORMAT.md).
+* [~] **Estructura de herramienta CLI:** Esqueleto y configuración de entorno para conversor en [`tools/converter/`](../tools/converter/).
+* [ ] **Parser de MagicaVoxel (.vox):** Módulo de importación de vóxeles y paletas de color `.vox`.
+* [ ] **Parser de Blockbench (.bbmodel):** Importador de modelos JSON/Blockbench.
+* [ ] **Generador Binario VX3:** Empaquetador offline con alineación de 128 bytes para RSX.
 
-## Resumen de Hitos (Milestone Timeline)
+### 1.3. Plugin SPRX & Hooking PPU
+* [x] **Build System PSL1GHT:** `Makefile` configurado con flags Cell PPU (`-mcpu=cell -fno-rtti -fno-exceptions`).
+* [x] **Punto de Entrada PRX:** Funciones del ciclo de vida del módulo (`voxel3d_prx_start` / `voxel3d_prx_stop`) en [`main.cpp`](../sprx/src/main.cpp).
+* [x] **Diseño de Trampolines PowerPC:** Secuencia de salto absoluto de 16 bytes (`lis/ori/mtctr/bctr`) en [`PPU_HOOKING.md`](PPU_HOOKING.md).
+* [x] **Coherencia de Caché PPU:** Rutina de sincronización e invalidación estricta (`dcbst/sync/icbi/isync`).
+* [~] **Inyector de Hooks C++:** Implementación de `install_ppu_hook` con llamadas `sys_dbg_write_process_memory`.
+* [~] **Telemetría UDP NetLogger:** Transmisión de logs en tiempo real por red hacia PC de desarrollo.
+* [ ] **Verificación en RPCS3:** Validación del hook en emulador sin congelamiento ni desalineación de pila.
 
-```
-[ Fase 0: Investigación & Reversing ] ────► [ Fase 1: Pipeline de Conversión (.vx3) ]
-                   │                                          │
-                   ▼                                          ▼
-[ Fase 2: Hook PPU & Scaffolding ]    ────► [ Fase 3: Renderizado RSX (libgcm) ]
-                   │                                          │
-                   ▼                                          ▼
-[ Fase 4: Físicas, ADS & Retroceso ]  ────► [ Fase 5: Estabilización & Release 1.0 ]
-```
+### 1.4. Pipeline Gráfico RSX (libgcm)
+* [x] **Mapeo de Direcciones a Offsets:** Conversión de punteros efectivos a offsets del RSX con `cellGcmAddressToOffset()`.
+* [x] **Binding de Atributos de Vértices:** Configuración de 4 canales GCM (`ATTR 0` a `ATTR 3`) en [`RSX_PIPELINE.md`](RSX_PIPELINE.md).
+* [x] **Preservación de Estado del Rasterizador:** Reglas de Cero Fuga de Estado (Depth, Culling, Alpha Test).
+* [x] **Gestión de Memoria VRAM:** Pool estático cerrado de 4 MB en memoria local GDDR3 en [`MEMORY_MANAGEMENT.md`](MEMORY_MANAGEMENT.md).
+* [x] **Matriz MVP de Constantes:** Paso de matriz $M_{final}$ al Vertex Program mediante `cellGcmSetVertexProgramConstants()`.
+* [~] **Adquisición del Contexto GCM:** Captura del puntero global `CellGcmContextData` del motor de 4J.
+* [ ] **Emisión de Draw Call Indexado:** Ejecución de `cellGcmSetDrawIndexArray()` para mallas vóxel.
+* [ ] **Validación con RenderDoc:** Captura de frame bajo backend Vulkan en RPCS3 para verificar geometría.
 
----
-
-## Fase 0: Ingeniería Inversa y Mapeo de Memoria (Mes 1)
-**Objetivo:** Obtener los puntos de intercepción exactos y validar las estructuras del motor en el ejecutable desprotegido.
-
-* [~] **0.1. Preparación de Binarios:**
-  * Descifrado de `EBOOT.BIN` para versiones BLES01976 y NPUB31419 (actualización 1.84).
-  * Extracción del `EBOOT.ELF` y descompresión de secciones de código.
-* [ ] **0.2. Análisis Estático en Ghidra / IDA Pro:**
-  * Localización de la función virtual `ItemRenderer::renderItemInFirstPerson`.
-  * Identificación de la rutina que genera quads extruidos a partir de sprites de ítems.
-  * Extracción de las referencias a matrices del brazo (`renderFirstPersonArm`).
-* [ ] **0.3. Definición de Signaturas AOB:**
-  * Creación de patrones de bytes (*Array of Bytes*) para que el hook localice las funciones dinámicamente sin depender únicamente de offsets fijos.
-
-**Criterio de Aceptación:** Documentar en [`ENGINE_STRUCTURES.md`](file:///home/landy/Proyectos/Voxel3D-PS3/docs/ENGINE_STRUCTURES.md) las direcciones de memoria verificadas de `ItemRenderer` y validar que un breakpoint en RPCS3 se active exactamente al cambiar de ítem en la mano.
-
----
-
-## Fase 1: Pipeline Offline de Conversión de Mallas (Mes 2)
-**Objetivo:** Desarrollar la herramienta CLI para exportar modelos vóxel optimizados al formato binario `.vx3`.
-
-* [ ] **1.1. Parser de Formatos Fuente:**
-  * Lector de archivos MagicaVoxel (`.vox`).
-  * Lector de modelos JSON / Blockbench (`.bbmodel`).
-* [ ] **1.2. Algoritmos de Optimización de Malla:**
-  * Implementación de *Occlusion Culling* (descartar caras internas de cubos coplanares y adyacentes).
-  * Implementación de *Greedy Meshing* (fusión de rectángulos continuos de igual color/textura para reducir drásticamente el recuento de triángulos).
-* [ ] **1.3. Compresor y Empaquetador Binario:**
-  * Cuantización de coordenadas a formato `int16_t` y empaquetado de normales/flags en 12 bytes por vértice (`VoxelVertex`).
-  * Generación de la cabecera estándar `VX3D` y cálculo de bounding box / offsets de alineación (128 bytes).
-
-**Criterio de Aceptación:** Convertir un modelo complejo de rifle vóxel (ej. AK-47) desde `.vox` a `.vx3` con menos de 2,000 triángulos, un tamaño inferior a 30 KB y validar su integridad estructural con un script de desempaquetado de prueba.
+### 1.5. Cinemática, ADS & Configuración Data-Driven
+* [x] **Modelo Matemático de Retroceso:** Algoritmo de impulso instantáneo y decaimiento exponencial ($P_{target} + \Delta P \cdot e^{-\lambda t}$).
+* [x] **Interpolación de Apuntado ADS:** Traslación hacia el centro de la cámara y ajuste multiplicativo del FOV.
+* [x] **Esquema de Configuración JSON:** Especificación formal del archivo `config.json` en [`CONFIG_SPEC.md`](CONFIG_SPEC.md).
+* [x] **Estructura C++ en Memoria:** Estructura compacta `VoxelItemConfig` para búsqueda $O(1)$ sin alocaciones dinámicas.
+* [ ] **Lector Ligero de JSON en CellFS:** Parser embebido para leer configuraciones desde `/dev_hdd0/`.
+* [ ] **Detección de Gatillo L2:** Lectura del estado de apuntado del mando DualShock 3.
+* [ ] **Partículas de Muzzle Flash:** Posicionamiento del destello y salida de proyectiles en el cañón.
 
 ---
 
-## Fase 2: Scaffolding del Plugin SPRX y Hook Seguro (Mes 3)
-**Objetivo:** Crear el esqueleto funcional del módulo `.sprx` capaz de inyectar trampolines en la PPU sin alterar la estabilidad del juego.
+## 2. Hitos de Implementación (Milestones)
 
-* [~] **2.1. Toolchain y Build System:**
-  * Configuración del `Makefile` bajo `PSL1GHT v2` y generación limpia del archivo `Voxel3D-PS3.sprx`.
-  * Implementación de funciones de ciclo de vida del módulo (`sys_prx_start` y `sys_prx_stop`).
-* [ ] **2.2. Motor de Trampolines PowerPC:**
-  * Implementación de la secuencia de salto absoluto de 16 bytes (`lis/ori/mtctr/bctr`).
-  * Inyección en memoria de código mediante syscalls de depuración (`sys_dbg_write_process_memory`).
-  * Rutina obligatoria de invalidación y sincronización de cachés (`dcbst`, `sync`, `icbi`, `isync`).
-* [ ] **2.3. Sistema de Telemetría UDP:**
-  * Integración del cliente de logging por sockets UDP para transmitir trazas de ejecución en vivo hacia la PC de desarrollo.
+### Fase 0: Ingeniería Inversa y Mapeo de Memoria
+* [x] **0.1. Metodología de análisis:** Guía y preparación de entorno para desensamblado PowerPC en [`REVERSE_ENGINEERING.md`](REVERSE_ENGINEERING.md).
+* [x] **0.2. Layouts de clases del motor:** Reconstrucción de `ItemStack`, `InventoryPlayer` y `ItemRenderer`.
+* [~] **0.3. Descifrado de EBOOT.BIN:** Extracción de ELF desprotegido de la versión 1.84 (BLES01976 / NPUB31419).
+* [ ] **0.4. Localización de offsets PPU:** Offsets verificados de `renderItemInFirstPerson` y `renderFirstPersonArm`.
+* [ ] **0.5. Validación dinámica en RPCS3:** Breakpoint verificado al cambiar de slot de ítem en la hotbar.
 
-**Criterio de Aceptación:** Cargar el `.sprx` en RPCS3 y consola física, interceptar `renderItemInFirstPerson`, registrar el ID del ítem sostenido en el log UDP y retornar limpiamente mediante el trampolín sin congelar el juego.
+### Fase 1: Pipeline Offline de Conversión de Mallas
+* [x] **1.1. Especificación del formato VX3:** Formato binario con cabecera de 16 bytes y empaquetado de vértices.
+* [x] **1.2. Definición de algoritmos de optimización:** Reglas de *Greedy Meshing* y *Occlusion Culling*.
+* [~] **1.3. Scaffolding de la herramienta CLI:** Estructura del proyecto en [`tools/converter/`](../tools/converter/).
+* [ ] **1.4. Implementación del optimizador de mallas:** Algoritmo de reducción de triángulos para mallas vóxel.
+* [ ] **1.5. Conversión de modelo de prueba:** Exportación y verificación de modelo complejo (AK-47) $< 30\text{ KB}$.
 
----
+### Fase 2: Scaffolding del Plugin SPRX y Hook Seguro
+* [x] **2.1. Toolchain y Build System:** `Makefile` PSL1GHT v2 y reglas de compilación para Cell PPU.
+* [x] **2.2. Punto de entrada y salida del módulo:** Estructura PRX (`voxel3d_prx_start` / `voxel3d_prx_stop`).
+* [x] **2.3. Arquitectura del trampolín PPU:** Salto absoluto de 16 bytes e invalidación de caché L1.
+* [~] **2.4. Telemetría de depuración por red:** Integración del cliente NetLogger UDP hacia PC de desarrollo.
+* [ ] **2.5. Inyección limpia en caliente:** Parcheo de memoria y ejecución del hook sin cuelgues de consola.
 
-## Fase 3: Pipeline de Renderizado RSX de Bajo Nivel (Mes 4)
-**Objetivo:** Reservar memoria VRAM y dibujar la primera malla vóxel 3D en pantalla sustituyendo el sprite original.
+### Fase 3: Pipeline de Renderizado RSX de Bajo Nivel
+* [x] **3.1. Especificación de Vertex Arrays:** Mapeo de atributos RSX y offsets de hardware.
+* [x] **3.2. Presupuesto y alocación en VRAM:** Diseño del pool cerrado estático de 4 MB en GDDR3.
+* [x] **3.3. Preservación del rasterizador:** Configuración de Depth, Alpha y Culling sin fugas de estado.
+* [ ] **3.4. Reserva física de memoria local:** Alocación en `dev_gcm` y carga de modelos desde disco duro.
+* [ ] **3.5. Emisión de Draw Call indexado:** Renderizado 3D de la malla vóxel reemplazando el sprite 2D.
 
-* [ ] **3.1. Alocador Estático de VRAM:**
-  * Reserva del pool de 4 MB en memoria local GDDR3 (`CELL_GCM_LOCATION_LOCAL`).
-  * Carga del archivo de prueba `.vx3` desde `/dev_hdd0/` directamente al pool.
-  * Conversión de punteros a offsets del RSX con `cellGcmAddressToOffset()`.
-* [ ] **3.2. Configuración del Rasterizador:**
-  * Configuración de estados GCM: `cellGcmSetDepthTestEnable`, `cellGcmSetCullFaceEnable`, `cellGcmSetAlphaTestEnable`.
-  * Vinculación de los 4 canales de atributos del vértice con `cellGcmSetVertexDataArray()`.
-* [ ] **3.3. Emisión de Dibujo Indexado:**
-  * Supresión de la llamada de renderizado 2D vanilla cuando el ítem sostenido coincide con el ID registrado.
-  * Envío del comando de dibujo `cellGcmSetDrawIndexArray()`.
-  * Preservación del estado gráfico del motor para no romper el renderizado del brazo ni del HUD.
+### Fase 4: Cinemática, Apuntado (ADS) y Retroceso LERP
+* [x] **4.1. Formulación matemática del retroceso:** Algoritmo de retroceso instantáneo y recuperación suave.
+* [x] **4.2. Especificación de ADS y FOV:** Interpolación de posición central y multiplicador de campo de visión.
+* [ ] **4.3. Multiplicación de matrices en tiempo real:** Transformación ligada a la mano del jugador.
+* [ ] **4.4. Detección de controles (L2):** Activación fluida del modo apuntado con el mando.
+* [ ] **4.5. Renderizado de Muzzle Flash:** Destello de disparo sincronizado con el arma.
 
-**Criterio de Aceptación:** Renderizar en pantalla un ítem 3D vóxel en primera persona en lugar del sprite 2D de Minecraft, manteniendo 60 FPS estables y sin artefactos en la interfaz.
-
----
-
-## Fase 4: Cinemática, Apuntado (ADS) y Retroceso LERP (Mes 5)
-**Objetivo:** Integrar el comportamiento dinámico de armas estilo *MrCrayfish's Gun Mod*.
-
-* [ ] **4.1. Transformaciones de Cámara y Brazo:**
-  * Multiplicación y enlace de matrices: Matriz del modelo $\times$ Matriz de la mano del jugador $\times$ Proyección.
-* [ ] **4.2. Sistema de Apuntado ADS (Aim Down Sights):**
-  * Detección del botón L2 (gatillo izquierdo del DualShock 3 / mando).
-  * Interpolación suave de traslación hacia el centro de la pantalla $(X=0)$ y ajuste dinámico del FOV de la cámara.
-* [ ] **4.3. Algoritmo de Retroceso y Recuperación:**
-  * Aplicación de impulso instantáneo (*kick impulse*) en posición y ángulo al disparar.
-  * Recuperación suave mediante decaimiento exponencial ($P_{target} + (P - P_{target}) \cdot e^{-\lambda \Delta t}$).
-* [ ] **4.4. Efectos Visuales (Muzzle Flash):**
-  * Renderizado del destello de disparo en las coordenadas definidas del cañón.
-
-**Criterio de Aceptación:** Transición fluida de reposo a apuntado ADS en menos de 200 ms y recuperación realista de retroceso tras disparar ráfagas continuas.
-
----
-
-## Fase 5: Sistema Data-Driven y Estabilización v1.0 (Mes 6)
-**Objetivo:** Eliminar cualquier parámetro fijo del código fuente y preparar el paquete final para usuarios finales.
-
-* [ ] **5.1. Parser Ligero de Configuración JSON:**
-  * Carga y parseo seguro de `/dev_hdd0/game/<TITLE_ID>/USRDIR/voxel3d/config.json`.
-  * Indexación en memoria XDR para mapeo instantáneo $O(1)$ de ítems y modelos.
-* [ ] **5.2. Pruebas de Estrés y Memory Leak Profiling:**
-  * Validación de estabilidad en sesiones de juego continuas de más de 2 horas.
-  * Cambio rápido de slots en la hotbar para verificar ausencia de fugas de memoria en VRAM.
-* [ ] **5.3. Compatibilidad Multi-Región:**
-  * Verificación y soporte de TitleIDs: `BLES01976` (Disco EU), `NPUB31419` (Digital US), `NPEB01899` (Digital EU), `BLUS31426` (Disco US).
-* [ ] **5.4. Documentación y Release Público:**
-  * Guía de instalación para el usuario final (archivos `.pkg` o copia manual por FTP/webMAN).
-  * Pack inicial de 5 armas de prueba (Pistola, Escopeta, Subfusil, Fusil de asalto, Francotirador).
-
-**Criterio de Aceptación:** Publicación de la versión **v1.0.0** con soporte completo para las versiones principales de Minecraft PS3, con instalador y modelos de muestra funcionales.
+### Fase 5: Sistema Data-Driven y Estabilización v1.0
+* [x] **5.1. Esquema JSON de configuración:** Especificación del formato de datos para armas y parámetros.
+* [x] **5.2. Estructura C++ de acceso rápido:** Caché $O(1)$ en memoria para parámetros sin búsquedas costosas.
+* [ ] **5.3. Parser embebido de JSON:** Lectura de `config.json` en PS3 con CellFS sin fugas de memoria.
+* [ ] **5.4. Pruebas de estabilidad prolongadas:** Sesiones continuas de 2 horas sin caídas de FPS ni memory leaks.
+* [ ] **5.5. Empaquetado final v1.0:** Instalador para CFW/HEN y paquete inicial de 5 armas de prueba.
 
 ---
 
@@ -159,10 +119,3 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 | **Corrupción de Estado Gráfico RSX** | Alta | Alta | Guardar y restaurar explícitamente los estados de Depth, Alpha y Culling al entrar y salir del hook. |
 | **Divergencia de Offsets entre Actualizaciones** | Media | Alta | Utilizar escaneo de signaturas por patrones de bytes (AOB) en lugar de direcciones codificadas en duro. |
 | **Congelamiento de la Consola al Desmontar Plugin** | Alta | Baja | Sincronizar el pipeline RSX con `cellGcmFinish()` antes de desvincular los trampolines y liberar el pool. |
-
----
-
-## Exploraciones Futuras (Post-1.0)
-* Renderizado de armas vóxel en tercera persona (vistas desde otros jugadores en pantalla dividida o multijugador).
-* Descarga de compresión y descompresión de mallas al procesador vectorial SPU (Synergistic Processing Unit).
-* Inyección de bancos de audio personalizados para sonidos de disparos y recarga.

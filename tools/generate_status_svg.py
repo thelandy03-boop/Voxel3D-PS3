@@ -181,7 +181,7 @@ def draw_badge(svg: list[str], x: float, label: str, val: float) -> float:
 def parse_roadmap() -> tuple[list[Group], list[Group]]:
     """
     Parses docs/ROADMAP.md directly.
-    Returns (spec_groups, phase_groups) based on real checkboxes.
+    Returns (subsystem_groups, phase_groups) based on real checkboxes.
     """
     if not ROADMAP_PATH.exists():
         raise FileNotFoundError(f"Cannot find {ROADMAP_PATH}")
@@ -189,43 +189,60 @@ def parse_roadmap() -> tuple[list[Group], list[Group]]:
     content = ROADMAP_PATH.read_text(encoding="utf-8")
     lines = content.splitlines()
 
-    spec_groups: list[Group] = []
+    subsystem_groups: list[Group] = []
     phase_groups: list[Group] = []
 
+    current_section = None  # 1 for Subsystems, 2 for Phases
     current_group_name = None
     current_items: list[str] = []
-    is_spec = False
+
+    def flush_group():
+        nonlocal current_group_name, current_items
+        if current_group_name and current_items:
+            g = Group(current_group_name, list(current_items))
+            if current_section == 1:
+                subsystem_groups.append(g)
+            elif current_section == 2:
+                phase_groups.append(g)
+            current_items = []
+            current_group_name = None
 
     for line in lines:
         stripped = line.strip()
 
-        # Detect section header
-        if stripped.startswith("## "):
-            # Save previous group
-            if current_group_name and current_items:
-                g = Group(current_group_name, current_items)
-                if is_spec:
-                    spec_groups.append(g)
-                else:
-                    phase_groups.append(g)
-                current_items = []
+        # Major section detection
+        if stripped.startswith("## 1. Módulos"):
+            flush_group()
+            current_section = 1
+            continue
+        elif stripped.startswith("## 2. Hitos"):
+            flush_group()
+            current_section = 2
+            continue
+        elif stripped.startswith("## "):
+            flush_group()
+            current_section = None
+            continue
 
-            header_title = stripped[3:].strip()
-            # Clean header name
-            clean_title = re.sub(r"\(.*?\)", "", header_title).strip()
-            clean_title = clean_title.split(":")[0].strip()
-
-            if "Especificaciones" in header_title or "0. " in header_title:
-                is_spec = True
-                current_group_name = "Specs & Docs"
-            elif "Fase " in header_title:
-                is_spec = False
-                current_group_name = clean_title
-            else:
-                current_group_name = None
+        # Subgroup detection
+        if stripped.startswith("### ") and current_section in (1, 2):
+            flush_group()
+            title = stripped[4:].strip()
+            # Clean title
+            title = re.sub(r"\(.*?\)", "", title).strip()
+            title = title.split(":")[0].strip()
+            # Simplify name for SVG label
+            title = title.replace("Formato de Malla ", "")
+            title = title.replace("Plugin ", "")
+            title = title.replace("Pipeline Gráfico ", "")
+            title = title.replace("Pipeline Offline de ", "")
+            title = title.replace("Scaffolding del Plugin ", "")
+            title = title.replace("Sistema Data-Driven y ", "")
+            current_group_name = title.strip()
+            continue
 
         # Check for task checkboxes
-        if current_group_name:
+        if current_group_name and current_section:
             if stripped.startswith(("* [x]", "- [x]")):
                 current_items.append("done")
             elif stripped.startswith(("* [~]", "- [~]")):
@@ -233,24 +250,9 @@ def parse_roadmap() -> tuple[list[Group], list[Group]]:
             elif stripped.startswith(("* [ ]", "- [ ]")):
                 current_items.append("todo")
 
-    # Flush last group
-    if current_group_name and current_items:
-        g = Group(current_group_name, current_items)
-        if is_spec:
-            spec_groups.append(g)
-        else:
-            phase_groups.append(g)
+    flush_group()
 
-    # If spec_groups is a single group with 9 items, split it logically for the treemap
-    if spec_groups and len(spec_groups) == 1 and len(spec_groups[0].items) >= 4:
-        all_specs = spec_groups[0].items
-        spec_groups = [
-            Group("Core Architecture", all_specs[:3]),
-            Group("RSX & Memory Specs", all_specs[3:6]),
-            Group("Toolchain & Reversing", all_specs[6:]),
-        ]
-
-    return spec_groups, phase_groups
+    return subsystem_groups, phase_groups
 
 
 def update_readme_milestones(phase_groups: list[Group]):
@@ -322,7 +324,7 @@ def generate_status():
 
     # Header Badges
     x = MARGIN
-    x = draw_badge(svg_parts, x, "specifications", spec_pct)
+    x = draw_badge(svg_parts, x, "subsystems", spec_pct)
     draw_badge(svg_parts, x, "roadmap", roadmap_pct)
 
     # Two Charts Layout (Side by side)
@@ -332,7 +334,7 @@ def generate_status():
     chart1_area = Rect(MARGIN, CHART_TOP, chart_w, chart_h)
     chart2_area = Rect(MARGIN * 2.0 + chart_w, CHART_TOP, chart_w, chart_h)
 
-    draw_chart(svg_parts, chart1_area, "Technical Specifications", spec_groups)
+    draw_chart(svg_parts, chart1_area, "System Architecture", spec_groups)
     draw_chart(svg_parts, chart2_area, "Implementation Roadmap", phase_groups)
 
     # Legend at bottom
