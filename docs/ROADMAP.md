@@ -69,15 +69,15 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 * [x] **3.5. Preservación del Rasterizador:** Guardado y restauración estricta de Depth, Alpha y Culling sin fugas de estado.
 
 ### Fase 4: Cinemática, Apuntado (ADS) y Retroceso LERP
-* [ ] **4.1. Transformaciones Espaciales:** Multiplicación de matriz del modelo vóxel con la matriz de la mano del jugador.
-* [ ] **4.2. Detección de Controles (L2):** Detección del estado de apuntado en el mando DualShock 3.
-* [ ] **4.3. Interpolación de Apuntado ADS:** Traslación hacia el centro de la pantalla y multiplicador dinámico de FOV.
-* [ ] **4.4. Impulso y Recuperación de Retroceso:** Física de retroceso instantáneo y decaimiento exponencial en runtime.
+* [x] **4.1. Transformaciones Espaciales:** Multiplicación de matriz del modelo vóxel con la matriz de la mano del jugador.
+* [x] **4.2. Detección de Controles (L2):** Detección del estado de apuntado en el mando DualShock 3.
+* [x] **4.3. Interpolación de Apuntado ADS:** Traslación hacia el centro de la pantalla y multiplicador dinámico de FOV.
+* [x] **4.4. Impulso y Recuperación de Retroceso:** Física de retroceso instantáneo y decaimiento exponencial en runtime.
 * [ ] **4.5. Efecto Visual de Muzzle Flash:** Renderizado del destello de disparo en las coordenadas del cañón.
 
 ### Fase 5: Sistema Data-Driven y Release v1.0
 * [x] **5.1. Generación de Presets y Configuración:** Transpilación de matrices de MrCrayfish hacia [`crayfish_config.json`](../models/crayfish_config.json) y [`crayfish_transforms.h`](../sprx/include/crayfish_transforms.h).
-* [ ] **5.2. Tabla de Búsqueda O(1):** Indexación en memoria XDR para resolución inmediata de armas sin alocaciones dinámicas.
+* [x] **5.2. Tabla de Búsqueda O(1):** Indexación en memoria XDR para resolución inmediata de armas sin alocaciones dinámicas.
 * [ ] **5.3. Pruebas de Estabilidad Prolongadas:** Sesiones continuas de 2 horas sin caídas de framerate ni fugas de memoria.
 * [ ] **5.4. Soporte Multi-Región:** Validación de compatibilidad con versiones BLES01976 y NPUB31419.
 * [ ] **5.5. Empaquetado Final v1.0:** Instalador para CFW/HEN y pack inicial de 5 armas vóxel de prueba.
