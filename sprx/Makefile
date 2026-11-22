@@ -2,7 +2,7 @@
 # Requiere PSL1GHT / ps3dev toolchain
 
 TARGET = Voxel3D-PS3
-OBJS = src/main.o src/hook.o
+OBJS = src/main.o src/hook.o src/netlogger.o
 
 CFLAGS = -Wall -O2 -mcpu=cell -fno-strict-aliasing
 CXXFLAGS = $(CFLAGS) -fno-rtti -fno-exceptions

@@ -58,7 +58,7 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 * [x] **2.1. Build System PSL1GHT:** `Makefile` inicial configurado con flags de compilación para Cell PPU.
 * [x] **2.2. Esqueleto del Módulo PRX:** Entry points `voxel3d_prx_start` y `voxel3d_prx_stop` en [`main.cpp`](../sprx/src/main.cpp).
 * [x] **2.3. Inyector de Trampolín PPU:** Implementación en C++ de parcheo de memoria con `sys_dbg_write_process_memory`.
-* [ ] **2.4. Telemetría UDP en Tiempo Real:** Integración del cliente NetLogger en el plugin para envío de logs.
+* [x] **2.4. Telemetría UDP en Tiempo Real:** Integración del cliente NetLogger en el plugin para envío de logs.
 * [ ] **2.5. Inyección Limpia en Runtime:** Prueba de intercepción en RPCS3 sin congelar el hilo principal.
 
 ### Fase 3: Pipeline de Renderizado RSX de Bajo Nivel

@@ -19,7 +19,7 @@
 ---
 
 ### 📊 Progreso General del Proyecto
-![](https://geps.dev/progress/30?dangerColor=800000&warningColor=ffbf00&successColor=00d26a)
+![](https://geps.dev/progress/33?dangerColor=800000&warningColor=ffbf00&successColor=00d26a)
 
 </div>
 
@@ -35,7 +35,7 @@
 | :--- | :--- | :---: | :---: | :---: |
 | **Fase 0** | Reversing de `EBOOT.BIN` & Mapeo de Offsets | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
 | **Fase 1** | Pipeline Offline (`.vox` / `.bbmodel` ➔ `.vx3`) | `■■■■■■■■■■` | **100.0%** | 🟢 Completado |
-| **Fase 2** | Scaffolding SPRX & Trampolines PPU (PPC ABI) | `■■■■■■□□□□` | **60.0%** | 🟡 En curso |
+| **Fase 2** | Scaffolding SPRX & Trampolines PPU (PPC ABI) | `■■■■■■■■□□` | **80.0%** | 🟡 En curso |
 | **Fase 3** | Renderizado RSX de Bajo Nivel (`libgcm` Draw Calls) | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
 | **Fase 4** | Cinemática ADS & Retroceso Amortiguado (LERP) | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
 | **Fase 5** | Sistema Data-Driven (`config.json`) & Release v1.0 | `■■□□□□□□□□` | **20.0%** | 🟡 En curso |
