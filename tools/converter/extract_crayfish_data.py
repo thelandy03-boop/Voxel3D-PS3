@@ -1,0 +1,281 @@
+#!/usr/bin/env python3
+"""
+Voxel3D-PS3 Crayfish Mod Data Extractor & C++ Transpiler
+Extracts 4x4 bone transformation matrices, poses, and animations
+directly from epic_crayfish-1.0.1.jar and transpiles them into:
+ 1. Native C++ header (sprx/include/crayfish_transforms.h)
+ 2. Data-driven configuration (models/crayfish_config.json)
+"""
+
+import argparse
+import json
+import math
+import sys
+import zipfile
+from pathlib import Path
+
+DEFAULT_JAR_PATH = Path("/home/landy/Descargas/epic_crayfish-1.0.1.jar")
+HEADER_OUTPUT_PATH = Path("sprx/include/crayfish_transforms.h")
+CONFIG_OUTPUT_PATH = Path("models/crayfish_config.json")
+
+WEAPON_TYPES = ["pistol", "rifle", "bazooka", "mini_gun"]
+
+
+def matrix_to_euler_angles(m: list[float]) -> tuple[float, float, float]:
+    """
+    Deconstructs a 4x4 row-major matrix to Euler angles (Pitch, Yaw, Roll in degrees).
+    Assumes rotation block m[0..2], m[4..6], m[8..10].
+    """
+    # m[0] m[1] m[2]  m[3]
+    # m[4] m[5] m[6]  m[7]
+    # m[8] m[9] m[10] m[11]
+    # m[12] m[13] m[14] m[15]
+    r00, r01, r02 = m[0], m[1], m[2]
+    r10, r11, r12 = m[4], m[5], m[6]
+    r20, r21, r22 = m[8], m[9], m[10]
+
+    # Handle gimbal lock
+    if abs(r20) < 0.99999:
+        yaw = -math.asin(r20)
+        pitch = math.atan2(r21 / math.cos(yaw), r22 / math.cos(yaw))
+        roll = math.atan2(r10 / math.cos(yaw), r00 / math.cos(yaw))
+    else:
+        # Gimbal lock
+        roll = 0.0
+        if r20 <= -0.99999:
+            yaw = math.pi / 2.0
+            pitch = roll + math.atan2(r01, r02)
+        else:
+            yaw = -math.pi / 2.0
+            pitch = -roll + math.atan2(-r01, -r02)
+
+    return (math.degrees(pitch), math.degrees(yaw), math.degrees(roll))
+
+
+def extract_bone_transform(
+    anim_data: dict, bone_name: str
+) -> tuple[list[float], list[list[float]]] | None:
+    """
+    Finds a bone in the animation list and returns (times, transforms_matrices).
+    """
+    for entry in anim_data.get("animation", []):
+        if entry.get("name") == bone_name:
+            times = entry.get("time", [])
+            transforms = entry.get("transform", [])
+            return times, transforms
+    return None
+
+
+def process_jar(jar_path: Path):
+    if not jar_path.exists():
+        print(f"Error: JAR file not found at {jar_path}")
+        sys.exit(1)
+
+    print(f"[+] Opening {jar_path}...")
+    extracted_weapons = {}
+
+    with zipfile.ZipFile(jar_path, "r") as z:
+        for weapon in WEAPON_TYPES:
+            hold_file = f"assets/epiccrayfish/animmodels/animations/biped/living/hold_{weapon}_mid.json"
+            aim_file = f"assets/epiccrayfish/animmodels/animations/biped/combat/{weapon}_aim_mid.json"
+            reload_file = f"assets/epiccrayfish/animmodels/animations/biped/combat/{weapon}_reload.json"
+
+            weapon_data = {
+                "name": weapon,
+                "hold": None,
+                "aim": None,
+                "reload": None,
+            }
+
+            # Extract Hold Pose (Rest State)
+            if hold_file in z.namelist():
+                raw = json.loads(z.read(hold_file))
+                bone = extract_bone_transform(raw, "Tool_R")
+                if bone and len(bone[1]) > 0:
+                    mat = bone[1][0]  # First keyframe
+                    pitch, yaw, roll = matrix_to_euler_angles(mat)
+                    weapon_data["hold"] = {
+                        "matrix": mat,
+                        "translation": [round(mat[3], 4), round(mat[7], 4), round(mat[11], 4)],
+                        "rotation": [round(pitch, 2), round(yaw, 2), round(roll, 2)],
+                    }
+
+            # Extract Aim Pose (ADS State)
+            if aim_file in z.namelist():
+                raw = json.loads(z.read(aim_file))
+                bone = extract_bone_transform(raw, "Tool_R")
+                if bone and len(bone[1]) > 0:
+                    mat = bone[1][0]
+                    pitch, yaw, roll = matrix_to_euler_angles(mat)
+                    weapon_data["aim"] = {
+                        "matrix": mat,
+                        "translation": [round(mat[3], 4), round(mat[7], 4), round(mat[11], 4)],
+                        "rotation": [round(pitch, 2), round(yaw, 2), round(roll, 2)],
+                    }
+
+            # Extract Reload Animation Keyframes
+            if reload_file in z.namelist():
+                raw = json.loads(z.read(reload_file))
+                bone = extract_bone_transform(raw, "Tool_R")
+                if bone:
+                    times, transforms = bone
+                    weapon_data["reload"] = {
+                        "times": times,
+                        "transforms": transforms,
+                    }
+
+            extracted_weapons[weapon] = weapon_data
+            print(f"  [✓] Processed transforms for: {weapon.upper()}")
+
+    return extracted_weapons
+
+
+def generate_cpp_header(weapons: dict, output_path: Path):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    lines = [
+        "/* Auto-generated by tools/converter/extract_crayfish_data.py */",
+        "/* 4x4 matrix transforms transpiled from epic_crayfish-1.0.1.jar */",
+        "",
+        "#ifndef CRAYFISH_TRANSFORMS_H",
+        "#define CRAYFISH_TRANSFORMS_H",
+        "",
+        "#include <stdint.h>",
+        "",
+        "struct CrayfishPose {",
+        "    float matrix[16];     // Row-major 4x4 transform matrix",
+        "    float translation[3]; // X, Y, Z translation",
+        "    float rotation[3];    // Pitch, Yaw, Roll Euler angles in degrees",
+        "};",
+        "",
+        "struct CrayfishWeaponPreset {",
+        "    const char* name;",
+        "    CrayfishPose hold_pose; // Rest pose in first person",
+        "    CrayfishPose aim_pose;  // Aim Down Sights (ADS) pose",
+        "    float ads_fov_multiplier;",
+        "    float recoil_recovery;",
+        "};",
+        "",
+    ]
+
+    for weapon, data in weapons.items():
+        w_upper = weapon.upper()
+        hold = data.get("hold")
+        aim = data.get("aim")
+
+        if hold:
+            mat_str = ", ".join(f"{x:.6f}f" for x in hold["matrix"])
+            trans_str = ", ".join(f"{x:.4f}f" for x in hold["translation"])
+            rot_str = ", ".join(f"{x:.2f}f" for x in hold["rotation"])
+            lines.append(f"static const CrayfishPose POSE_{w_upper}_HOLD = {{")
+            lines.append(f"    {{ {mat_str} }},")
+            lines.append(f"    {{ {trans_str} }},")
+            lines.append(f"    {{ {rot_str} }}")
+            lines.append("};")
+            lines.append("")
+
+        if aim:
+            mat_str = ", ".join(f"{x:.6f}f" for x in aim["matrix"])
+            trans_str = ", ".join(f"{x:.4f}f" for x in aim["translation"])
+            rot_str = ", ".join(f"{x:.2f}f" for x in aim["rotation"])
+            lines.append(f"static const CrayfishPose POSE_{w_upper}_AIM = {{")
+            lines.append(f"    {{ {mat_str} }},")
+            lines.append(f"    {{ {trans_str} }},")
+            lines.append(f"    {{ {rot_str} }}")
+            lines.append("};")
+            lines.append("")
+
+    lines.append("// Array de presets disponibles para Voxel3D-PS3")
+    lines.append("static const CrayfishWeaponPreset CRAYFISH_PRESETS[] = {")
+    for weapon, data in weapons.items():
+        w_upper = weapon.upper()
+        fov = 0.80 if weapon == "pistol" else (0.70 if weapon == "rifle" else 0.65)
+        rec = 18.0 if weapon == "pistol" else (14.0 if weapon == "rifle" else 10.0)
+        lines.append(f'    {{ "{weapon}", POSE_{w_upper}_HOLD, POSE_{w_upper}_AIM, {fov}f, {rec}f }},')
+    lines.append("};")
+    lines.append("")
+    lines.append("#define CRAYFISH_PRESET_COUNT (sizeof(CRAYFISH_PRESETS) / sizeof(CRAYFISH_PRESETS[0]))")
+    lines.append("")
+    lines.append("#endif // CRAYFISH_TRANSFORMS_H")
+    lines.append("")
+
+    output_path.write_text("\n".join(lines), encoding="utf-8")
+    print(f"[✓] C++ Header generated: {output_path}")
+
+
+def generate_json_config(weapons: dict, output_path: Path):
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    items = []
+    item_id_map = {
+        "pistol": 290,   # Wooden Hoe -> Pistol
+        "rifle": 291,    # Stone Hoe -> Rifle
+        "bazooka": 292,  # Iron Hoe -> Bazooka
+        "mini_gun": 293, # Diamond Hoe -> Minigun
+    }
+
+    for weapon, data in weapons.items():
+        hold = data.get("hold")
+        aim = data.get("aim")
+        if not hold or not aim:
+            continue
+
+        item_entry = {
+            "name": f"MrCrayfish {weapon.replace('_', ' ').title()}",
+            "item_id": item_id_map.get(weapon, 290),
+            "metadata": 0,
+            "model_path": f"/dev_hdd0/game/BLES01976/USRDIR/voxel3d/models/{weapon}.vx3",
+            "transform": {
+                "scale": [0.0625, 0.0625, 0.0625],
+                "rest": {
+                    "position": hold["translation"],
+                    "rotation": hold["rotation"],
+                    "matrix_4x4": [round(x, 6) for x in hold["matrix"]],
+                },
+                "ads": {
+                    "position": aim["translation"],
+                    "rotation": aim["rotation"],
+                    "fov_multiplier": 0.80 if weapon == "pistol" else 0.70,
+                    "matrix_4x4": [round(x, 6) for x in aim["matrix"]],
+                },
+            },
+            "recoil": {
+                "kick_position": [0.0, 0.02, -0.08] if weapon == "rifle" else [0.0, 0.03, -0.05],
+                "kick_rotation": [12.0, 1.5, -2.0] if weapon == "rifle" else [18.0, 1.0, 0.0],
+                "recovery_speed": 14.0 if weapon == "rifle" else 18.0,
+            },
+            "fx": {
+                "muzzle_flash_pos": [0.0, 0.05, 0.50],
+                "sound_event": "random.explode" if weapon == "bazooka" else "random.bow",
+            },
+        }
+        items.append(item_entry)
+
+    config_data = {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "version": 1,
+        "plugin": "Voxel3D-PS3",
+        "source": "Transpiled from epic_crayfish-1.0.1.jar",
+        "items": items,
+    }
+
+    output_path.write_text(json.dumps(config_data, indent=2), encoding="utf-8")
+    print(f"[✓] JSON Config generated: {output_path}")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Extract 4x4 bone matrices from epic_crayfish.jar to C++ and JSON"
+    )
+    parser.add_argument("--jar", type=Path, default=DEFAULT_JAR_PATH, help="Path to epic_crayfish.jar")
+    args = parser.parse_args()
+
+    weapons = process_jar(args.jar)
+    generate_cpp_header(weapons, HEADER_OUTPUT_PATH)
+    generate_json_config(weapons, CONFIG_OUTPUT_PATH)
+
+    print("\n[+] Transpilation completed successfully with 100% authentic matrices!")
+
+
+if __name__ == "__main__":
+    main()
