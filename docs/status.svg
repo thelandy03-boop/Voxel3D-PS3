@@ -1,97 +1,67 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060.0 520.0" width="1060.0" height="520.0" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif">
 <rect width="1060.0" height="520.0" fill="#161b22"/>
 <rect x="16.0" y="16" width="90.0" height="24" fill="#555b63"/>
-<rect x="106.0" y="16" width="66.0" height="24" fill="#b08a1e"/>
+<rect x="106.0" y="16" width="66.0" height="24" fill="#2ea043"/>
 <text x="25.0" y="32.5" font-size="12" font-weight="600" fill="#fff">subsystems</text>
-<text x="115.0" y="32.5" font-size="12" font-weight="600" fill="#fff">61.4%</text>
+<text x="115.0" y="32.5" font-size="12" font-weight="600" fill="#fff">100.0%</text>
 <rect x="186.0" y="16" width="68.4" height="24" fill="#555b63"/>
-<rect x="254.4" y="16" width="66.0" height="24" fill="#b08a1e"/>
+<rect x="254.4" y="16" width="66.0" height="24" fill="#c0392b"/>
 <text x="195.0" y="32.5" font-size="12" font-weight="600" fill="#fff">roadmap</text>
-<text x="263.4" y="32.5" font-size="12" font-weight="600" fill="#fff">51.7%</text>
-<text x="16.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">System Architecture: 61.4% (19/35)</text>
-<rect x="16.0" y="84.0" width="56.5" height="89.5" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="72.5" y="84.0" width="56.5" height="89.5" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="129.1" y="84.0" width="56.5" height="89.5" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="16.0" y="173.5" width="56.5" height="89.5" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="72.5" y="173.5" width="56.5" height="89.5" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="129.1" y="173.5" width="56.5" height="89.5" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="16.0" y="263.1" width="84.8" height="89.5" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="100.8" y="263.1" width="84.8" height="89.5" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="16.0" y="84.0" width="169.6" height="268.6" fill="none" stroke="#10141a" stroke-width="2"/>
-<text x="21.0" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.4. RSX</text>
-<rect x="185.6" y="84.0" width="74.2" height="67.2" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="259.8" y="84.0" width="74.2" height="67.2" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="185.6" y="151.2" width="74.2" height="67.2" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="259.8" y="151.2" width="74.2" height="67.2" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="185.6" y="218.3" width="74.2" height="67.2" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="259.8" y="218.3" width="74.2" height="67.2" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="185.6" y="285.5" width="148.4" height="67.2" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="185.6" y="84.0" width="148.4" height="268.6" fill="none" stroke="#10141a" stroke-width="2"/>
-<text x="190.6" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.2. VX3 &amp; Tooling</text>
-<rect x="16.0" y="352.6" width="63.6" height="62.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="79.6" y="352.6" width="63.6" height="62.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="143.2" y="352.6" width="63.6" height="62.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="206.8" y="352.6" width="63.6" height="62.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="270.4" y="352.6" width="63.6" height="62.7" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="16.0" y="415.3" width="159.0" height="62.7" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="175.0" y="415.3" width="159.0" height="62.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="16.0" y="352.6" width="318.1" height="125.4" fill="none" stroke="#10141a" stroke-width="2"/>
-<text x="21.0" y="366.6" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.3. SPRX &amp; Hooking PPU</text>
-<rect x="334.1" y="84.0" width="62.6" height="70.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="396.7" y="84.0" width="62.6" height="70.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="459.4" y="84.0" width="62.6" height="70.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="334.1" y="154.7" width="62.6" height="70.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="396.7" y="154.7" width="62.6" height="70.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="459.4" y="154.7" width="62.6" height="70.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="334.1" y="225.4" width="187.9" height="70.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="334.1" y="84.0" width="187.9" height="212.2" fill="none" stroke="#10141a" stroke-width="2"/>
-<text x="339.1" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.5. Cinemática, ADS &amp; Co…</text>
-<rect x="334.1" y="296.2" width="62.6" height="90.9" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="396.7" y="296.2" width="62.6" height="90.9" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="459.4" y="296.2" width="62.6" height="90.9" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="334.1" y="387.1" width="62.6" height="90.9" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="396.7" y="387.1" width="62.6" height="90.9" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="459.4" y="387.1" width="62.6" height="90.9" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="334.1" y="296.2" width="187.9" height="181.8" fill="none" stroke="#10141a" stroke-width="2"/>
-<text x="339.1" y="310.2" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.1. Reversing &amp; Engine I…</text>
-<text x="538.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">Implementation Roadmap: 51.7% (14/30)</text>
-<rect x="538.0" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="601.2" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="664.5" y="84.0" width="63.2" height="65.7" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<text x="263.4" y="32.5" font-size="12" font-weight="600" fill="#fff">8.3%</text>
+<text x="16.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">System Architecture: 100.0% (9/9)</text>
+<rect x="16.0" y="84.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="128.4" y="84.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="240.9" y="84.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="16.0" y="84.0" width="337.3" height="197.0" fill="none" stroke="#10141a" stroke-width="2"/>
+<text x="21.0" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.1. Core Engine &amp; Arquitectura</text>
+<rect x="16.0" y="281.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="128.4" y="281.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="240.9" y="281.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="16.0" y="281.0" width="337.3" height="197.0" fill="none" stroke="#10141a" stroke-width="2"/>
+<text x="21.0" y="295.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.2. GPU RSX &amp; Gestión de Memoria</text>
+<rect x="353.3" y="84.0" width="84.3" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="437.7" y="84.0" width="84.3" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="353.3" y="281.0" width="168.7" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="353.3" y="84.0" width="168.7" height="394.0" fill="none" stroke="#10141a" stroke-width="2"/>
+<text x="358.3" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.3. Hooking, Configur…</text>
+<text x="538.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">Implementation Roadmap: 8.3% (1/30)</text>
+<rect x="538.0" y="84.0" width="63.2" height="65.7" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="601.2" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="664.5" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="727.8" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="538.0" y="149.7" width="253.0" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="538.0" y="84.0" width="253.0" height="131.3" fill="none" stroke="#10141a" stroke-width="2"/>
 <text x="543.0" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">Fase 0</text>
 <rect x="538.0" y="215.3" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="601.2" y="215.3" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="664.5" y="215.3" width="63.2" height="65.7" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="601.2" y="215.3" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="664.5" y="215.3" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="727.8" y="215.3" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="538.0" y="281.0" width="253.0" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="538.0" y="215.3" width="253.0" height="131.3" fill="none" stroke="#10141a" stroke-width="2"/>
 <text x="543.0" y="229.3" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">Fase 1</text>
-<rect x="538.0" y="346.7" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="601.2" y="346.7" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="664.5" y="346.7" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="727.8" y="346.7" width="63.2" height="65.7" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="538.0" y="346.7" width="63.2" height="65.7" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="601.2" y="346.7" width="63.2" height="65.7" fill="#b08a1e" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="664.5" y="346.7" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="727.8" y="346.7" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="538.0" y="412.3" width="253.0" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="538.0" y="346.7" width="253.0" height="131.3" fill="none" stroke="#10141a" stroke-width="2"/>
 <text x="543.0" y="360.7" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">Fase 2</text>
-<rect x="791.0" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="854.2" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="917.5" y="84.0" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="791.0" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="854.2" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="917.5" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="980.8" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="791.0" y="149.7" width="253.0" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="791.0" y="84.0" width="253.0" height="131.3" fill="none" stroke="#10141a" stroke-width="2"/>
 <text x="796.0" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">Fase 3</text>
-<rect x="791.0" y="215.3" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="854.2" y="215.3" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="791.0" y="215.3" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="854.2" y="215.3" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="917.5" y="215.3" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="980.8" y="215.3" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="791.0" y="281.0" width="253.0" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="791.0" y="215.3" width="253.0" height="131.3" fill="none" stroke="#10141a" stroke-width="2"/>
 <text x="796.0" y="229.3" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">Fase 4</text>
-<rect x="791.0" y="346.7" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="854.2" y="346.7" width="63.2" height="65.7" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="791.0" y="346.7" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="854.2" y="346.7" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="917.5" y="346.7" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="980.8" y="346.7" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="791.0" y="412.3" width="253.0" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>

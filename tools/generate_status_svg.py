@@ -211,11 +211,11 @@ def parse_roadmap() -> tuple[list[Group], list[Group]]:
         stripped = line.strip()
 
         # Major section detection
-        if stripped.startswith("## 1. Módulos"):
+        if stripped.startswith("## 1."):
             flush_group()
             current_section = 1
             continue
-        elif stripped.startswith("## 2. Hitos"):
+        elif stripped.startswith("## 2."):
             flush_group()
             current_section = 2
             continue
