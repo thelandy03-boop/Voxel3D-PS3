@@ -80,23 +80,31 @@ Su propósito es reemplazar el pipeline original de renderizado de ítems en pri
 ```
 Voxel3D-PS3/
 ├── README.md                  # Presentación general y estado
-├── docs/                      # Especificaciones técnicas de bajo nivel
+├── CONTRIBUTING.md            # Guía de contribución y política de cero métricas falsas
+├── SECURITY.md                # Seguridad técnica, estabilidad y advertencias PSN
+├── docs/                      # Centro de documentación técnica
+│   ├── README.md              # Índice maestro categorizado
 │   ├── ARCHITECTURE.md        # Arquitectura del hook y ciclo de render RSX GCM
+│   ├── ASSET_PIPELINE.md      # Guía para modeladores 3D (Blockbench/MagicaVoxel)
+│   ├── COMPILATION_GUIDE.md   # Compilación en Linux con ps3dev / PSL1GHT
 │   ├── CONFIG_SPEC.md         # Formato JSON data-driven de configuración
 │   ├── DEBUG_AND_TOOLCHAIN.md # Configuración de toolchain, RPCS3 y telemetría UDP
 │   ├── ENGINE_STRUCTURES.md   # Reconstrucción de clases C++ del motor 4J Studios
+│   ├── FAQ.md                 # Preguntas frecuentes técnicas y diseño
 │   ├── MEMORY_MANAGEMENT.md   # Presupuestos de memoria VRAM/XDR y alocación
 │   ├── PPU_HOOKING.md         # Mecanismos de intercepción PPU (PowerPC ABI y cache flush)
 │   ├── REVERSE_ENGINEERING.md # Metodología de análisis de EBOOT.BIN (Ghidra/IDA)
 │   ├── ROADMAP.md             # Hoja de ruta, hitos y matriz de mitigación de riesgos
 │   ├── RSX_PIPELINE.md        # Pipeline de bajo nivel y shaders en GPU RSX (libgcm)
-│   └── VX3_FORMAT.md          # Especificación del formato binario .vx3
+│   ├── VX3_FORMAT.md          # Especificación del formato binario .vx3
+│   └── WINDOWS_SETUP.md       # Configuración para Windows (WSL2, MSYS2 y RPCS3)
 ├── sprx/                      # Código fuente del plugin nativo C++ (.sprx)
 │   ├── Makefile               # Script de compilación PSL1GHT / ps3dev
 │   ├── include/               # Cabeceras (.h)
 │   └── src/                   # Implementación del hook y llamadas libgcm
 ├── tools/                     # Utilidades offline (conversor de mallas vóxel)
-│   └── converter/             # Script CLI para empaquetar modelos a .vx3
+│   ├── converter/             # Script CLI para empaquetar modelos a .vx3
+│   └── generate_status_svg.py # Generador dinámico del treemap de estado
 └── models/                    # Modelos de prueba y especificaciones
 ```
 

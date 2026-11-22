@@ -8,22 +8,26 @@
 <rect x="254.4" y="16" width="66.0" height="24" fill="#c0392b"/>
 <text x="195.0" y="32.5" font-size="12" font-weight="600" fill="#fff">roadmap</text>
 <text x="263.4" y="32.5" font-size="12" font-weight="600" fill="#fff">0.0%</text>
-<text x="16.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">System Architecture: 100.0% (9/9)</text>
-<rect x="16.0" y="84.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="128.4" y="84.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="240.9" y="84.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="16.0" y="84.0" width="337.3" height="197.0" fill="none" stroke="#10141a" stroke-width="2"/>
-<text x="21.0" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.1. Core Engine &amp; Arquitectura</text>
-<rect x="16.0" y="281.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="128.4" y="281.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="240.9" y="281.0" width="112.4" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="16.0" y="281.0" width="337.3" height="197.0" fill="none" stroke="#10141a" stroke-width="2"/>
-<text x="21.0" y="295.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.2. GPU RSX &amp; Gestión de Memoria</text>
-<rect x="353.3" y="84.0" width="84.3" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="437.7" y="84.0" width="84.3" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="353.3" y="281.0" width="168.7" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
-<rect x="353.3" y="84.0" width="168.7" height="394.0" fill="none" stroke="#10141a" stroke-width="2"/>
-<text x="358.3" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.3. Hooking, Configur…</text>
+<text x="16.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">System Architecture: 100.0% (13/13)</text>
+<rect x="16.0" y="84.0" width="116.8" height="109.4" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="132.8" y="84.0" width="116.8" height="109.4" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="249.5" y="84.0" width="116.8" height="109.4" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="16.0" y="193.4" width="175.2" height="109.4" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="191.2" y="193.4" width="175.2" height="109.4" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="16.0" y="84.0" width="350.3" height="218.9" fill="none" stroke="#10141a" stroke-width="2"/>
+<text x="21.0" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.3. Hooking, Toolchains &amp; Entornos</text>
+<rect x="16.0" y="302.9" width="116.8" height="87.6" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="132.8" y="302.9" width="116.8" height="87.6" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="249.5" y="302.9" width="116.8" height="87.6" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="16.0" y="390.4" width="350.3" height="87.6" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="16.0" y="302.9" width="350.3" height="175.1" fill="none" stroke="#10141a" stroke-width="2"/>
+<text x="21.0" y="316.9" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.1. Core Engine &amp; Arquitectura</text>
+<rect x="366.3" y="84.0" width="77.8" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="444.2" y="84.0" width="77.8" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="366.3" y="281.0" width="77.8" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="444.2" y="281.0" width="77.8" height="197.0" fill="#2ea043" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
+<rect x="366.3" y="84.0" width="155.7" height="394.0" fill="none" stroke="#10141a" stroke-width="2"/>
+<text x="371.3" y="98.0" font-size="12" font-weight="600" fill="#fff" stroke="#000" stroke-width="2.5" paint-order="stroke">1.2. GPU RSX, Memori…</text>
 <text x="538.0" y="74.0" font-size="14" font-weight="500" fill="#e6edf3">Implementation Roadmap: 0.0% (0/30)</text>
 <rect x="538.0" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>
 <rect x="601.2" y="84.0" width="63.2" height="65.7" fill="#3a3d44" stroke="#1f7a33" stroke-opacity=".55" stroke-width=".6"/>

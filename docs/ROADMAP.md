@@ -21,16 +21,20 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 * [x] **Arquitectura General:** Ciclo de renderizado, intercepción PPU y pipeline RSX en [`ARCHITECTURE.md`](ARCHITECTURE.md).
 * [x] **Estructuras C++ 4J Studios:** Mapeo de `ItemStack`, `InventoryPlayer` y matrices en [`ENGINE_STRUCTURES.md`](ENGINE_STRUCTURES.md).
 * [x] **Metodología de Reversing:** Guía para desensamblado con Ghidra/IDA en [`REVERSE_ENGINEERING.md`](REVERSE_ENGINEERING.md).
+* [x] **Preguntas Frecuentes:** Respuestas técnicas sobre diseño y compatibilidad en [`FAQ.md`](FAQ.md).
 
-### 1.2. GPU RSX & Gestión de Memoria
+### 1.2. GPU RSX, Memoria & Assets
 * [x] **Pipeline Gráfico RSX:** Gestión de contexto FIFO, vertex arrays y shaders en [`RSX_PIPELINE.md`](RSX_PIPELINE.md).
 * [x] **Presupuesto VRAM/XDR:** Alocación estática en GDDR3 local y memoria mapeada en [`MEMORY_MANAGEMENT.md`](MEMORY_MANAGEMENT.md).
 * [x] **Formato Binario VX3:** Especificación de cabecera y vértices compactos en [`VX3_FORMAT.md`](VX3_FORMAT.md).
+* [x] **Pipeline de Assets 3D:** Guía de modelado para Blockbench y MagicaVoxel en [`ASSET_PIPELINE.md`](ASSET_PIPELINE.md).
 
-### 1.3. Hooking, Configuración & Toolchain
+### 1.3. Hooking, Toolchains & Entornos
 * [x] **Ingeniería de Hooking PPU:** Trampolines absolutos de 16 bytes y coherencia de caché en [`PPU_HOOKING.md`](PPU_HOOKING.md).
 * [x] **Esquema Data-Driven:** Formato JSON para armas, retroceso LERP y ADS en [`CONFIG_SPEC.md`](CONFIG_SPEC.md).
 * [x] **Toolchain & Telemetría:** Entorno PSL1GHT, depuración en RPCS3 y NetLogger en [`DEBUG_AND_TOOLCHAIN.md`](DEBUG_AND_TOOLCHAIN.md).
+* [x] **Compilación en Linux:** Guía de compilación con ps3dev en [`COMPILATION_GUIDE.md`](COMPILATION_GUIDE.md).
+* [x] **Compilación en Windows:** Configuración con WSL2, MSYS2 y RPCS3 en [`WINDOWS_SETUP.md`](WINDOWS_SETUP.md).
 
 ---
 
