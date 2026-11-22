@@ -1,56 +1,91 @@
-# Voxel3D-PS3 🎮🔫
+<div align="center">
+
+# 🎮🔫 Voxel3D-PS3
+
+### High-Performance 3D Voxel Item Rendering Engine for Minecraft: PlayStation 3 Edition
+
+[![Platform](https://img.shields.io/badge/Platform-PlayStation_3-003791?style=for-the-badge&logo=playstation&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
+[![Target](https://img.shields.io/badge/Target-Minecraft_PS3_(4J_Studios)-2ea44f?style=for-the-badge&logo=minecraft&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
+[![Architecture](https://img.shields.io/badge/Architecture-Cell_PPU_%7C_RSX_G70-6f42c1?style=for-the-badge&logo=nvidia&logoColor=white)](docs/ARCHITECTURE.md)
+[![Toolchain](https://img.shields.io/badge/Toolchain-PSL1GHT_v2_%2F_ps3dev-f39c12?style=for-the-badge)](docs/DEBUG_AND_TOOLCHAIN.md)
+[![Stage](https://img.shields.io/badge/Status-Fase_0:_Research-blue?style=for-the-badge)](docs/ROADMAP.md)
+
+<br/>
+
+**[Documentación](docs/)** • **[Arquitectura](docs/ARCHITECTURE.md)** • **[Hoja de Ruta](docs/ROADMAP.md)** • **[Pipeline RSX](docs/RSX_PIPELINE.md)** • **[PPU Hooking](docs/PPU_HOOKING.md)** • **[Formato VX3](docs/VX3_FORMAT.md)**
+
+<br/>
+
+---
+
+### 📊 Progreso General del Proyecto
+![](https://geps.dev/progress/35?dangerColor=800000&warningColor=ffbf00&successColor=00d26a)
+
+</div>
+
+---
+
+### 📌 Estado de los Hitos (Milestones)
+
+| Fase | Componente / Hito | Barra de Progreso | % | Estado |
+| :--- | :--- | :---: | :---: | :---: |
+| **Fase 0** | Reversing de `EBOOT.BIN` & Mapeo de Offsets | `■■■■■■■■□□` | **80%** | 🟡 En curso |
+| **Fase 1** | Pipeline Offline (`.vox` / `.bbmodel` ➔ `.vx3`) | `■■■■■■□□□□` | **60%** | 🟡 En curso |
+| **Fase 2** | Scaffolding SPRX & Trampolines PPU (PPC ABI) | `■■■■□□□□□□` | **40%** | 🟡 En curso |
+| **Fase 3** | Renderizado RSX de Bajo Nivel (`libgcm` Draw Calls) | `■■□□□□□□□□` | **20%** | 🔵 En diseño |
+| **Fase 4** | Cinemática ADS & Retroceso Amortiguado (LERP) | `□□□□□□□□□□` | **0%** | ⚪ Pendiente |
+| **Fase 5** | Sistema Data-Driven (`config.json`) & Release v1.0 | `□□□□□□□□□□` | **0%** | ⚪ Pendiente |
+
+---
+
+## 📖 Visión General
 
 **Voxel3D-PS3** es un proyecto de investigación y desarrollo de un plugin nativo en C++ (`.sprx`) para **Minecraft: PlayStation 3 Edition** (binario nativo C++ compilado originalmente por 4J Studios).
 
-Su propósito principal es reemplazar el pipeline original de renderizado de ítems en primera persona (sprites planos 2D con extrusión dinámica de quads) por **mallas vóxel 3D precalculadas cargadas directamente en la VRAM local (RSX)**, emulando la estética de mods icónicos como *MrCrayfish's Gun Mod* sin colapsar el estrecho presupuesto de memoria y procesamiento de la consola.
+Su propósito es reemplazar el pipeline original de renderizado de ítems en primera persona (sprites planos 2D con extrusión dinámica de quads) por **mallas vóxel 3D precalculadas cargadas directamente en la VRAM local (RSX)**, emulando la estética y mecánicas de mods icónicos como *MrCrayfish's Gun Mod* sin colapsar el estrecho presupuesto de memoria y procesamiento de la consola.
+
+> [!IMPORTANT]
+> **PlayStation 3 opera con una arquitectura de memoria asimétrica (NUMA):** 256 MB XDR RAM (PPU) y 256 MB GDDR3 VRAM (RSX). Voxel3D-PS3 está diseñado bajo la premisa de **cero transferencias en caliente PPU-RSX**, manteniendo los modelos precalculados residentes en VRAM local (`CELL_GCM_LOCATION_LOCAL`).
 
 ---
 
-## 1. El Problema Técnico en PlayStation 3
-
-* **Arquitectura de hardware:**
-  * **Cell Broadband Engine:** PPU (PowerPC 64-bit) + 6 SPUs disponibles.
-  * **GPU RSX (Reality Synthesizer):** Arquitectura NVIDIA G70.
-  * **Memoria segmentada asimétrica:** 256 MB XDR RAM (sistema/PPU) y 256 MB GDDR3 VRAM (video/RSX).
-* **Limitaciones del motor 4J Studios:**
-  * El renderizado en primera persona dentro del `EBOOT.BIN` está hardcodeado y bifurca únicamente en dos caminos:
-    1. Bloques cúbicos completos de terreno (renderizados como voxel 16x16 estándar).
-    2. Sprites planos 2D generados con extrusión dinámica de quads (alto coste de CPU/PPU al recalcular quads por frame).
-  * No existe un parser de modelos dinámicos (JSON/OBJ) en tiempo de ejecución.
-  * Emitir draw calls individuales desde la CPU saturaría el command buffer del RSX, provocando cuelgues o caídas críticas de framerate.
-
----
-
-## 2. Pipeline de Solución Propuesto
+## ⚙️ Arquitectura del Pipeline de Solución
 
 ```
 [ Modelo Vóxel (Blockbench / MagicaVoxel) ]
                      │
                      ▼ (Conversor CLI Offline - Python/C++)
 [ Archivo Plano Binario (.vx3) ]
-  • Array contiguo de vértices optimizados (16-bit half-float / short)
-  • Malla optimizada con culling de caras internas ocultas
-  • Tamaño estimado: ~15-25 KB por modelo
+  • Array contiguo de vértices optimizados (12 bytes: S16 coords, UB normals, flags, UVs)
+  • Malla optimizada con culling de caras internas ocultas y greedy meshing
+  • Tamaño ultra-compacto: ~15-35 KB por modelo
                      │
                      ▼ (Carga en memoria PS3)
 [ Plugin Voxel3D-PS3 (.sprx) ]
-  • Alocación de VBO estático en memoria local GDDR3 RSX (dev_gcm)
-  • Hook en ItemRenderer::renderItemInFirstPerson (PPU)
-  • Detección de ID de ítem/arma personalizada
+  • Alocación de VBO estático en memoria local GDDR3 RSX (dev_gcm pool de 4 MB)
+  • Hook atómico en ItemRenderer::renderItemInFirstPerson (PPU PowerPC)
+  • Detección O(1) de ID de ítem/arma personalizada
   • Emisión de 1 solo Draw Call al RSX (cellGcmSetDrawIndexArray)
-  • Interpolación matemática (LERP) de retroceso y apuntado ligada al brazo
+  • Interpolación matemática (LERP) de retroceso y apuntado ADS
 ```
 
 ---
 
-## 3. Estructura del Repositorio
+## 📂 Estructura del Repositorio
 
 ```
 Voxel3D-PS3/
-├── README.md                  # Visión general y estado del proyecto
-├── docs/                      # Especificaciones técnicas y guías de reversing
+├── README.md                  # Presentación general y estado
+├── docs/                      # Especificaciones técnicas de bajo nivel
 │   ├── ARCHITECTURE.md        # Arquitectura del hook y ciclo de render RSX GCM
+│   ├── CONFIG_SPEC.md         # Formato JSON data-driven de configuración
+│   ├── DEBUG_AND_TOOLCHAIN.md # Configuración de toolchain, RPCS3 y telemetría UDP
+│   ├── ENGINE_STRUCTURES.md   # Reconstrucción de clases C++ del motor 4J Studios
+│   ├── MEMORY_MANAGEMENT.md   # Presupuestos de memoria VRAM/XDR y alocación
+│   ├── PPU_HOOKING.md         # Mecanismos de intercepción PPU (PowerPC ABI y cache flush)
 │   ├── REVERSE_ENGINEERING.md # Metodología de análisis de EBOOT.BIN (Ghidra/IDA)
+│   ├── ROADMAP.md             # Hoja de ruta, hitos y matriz de mitigación de riesgos
+│   ├── RSX_PIPELINE.md        # Pipeline de bajo nivel y shaders en GPU RSX (libgcm)
 │   └── VX3_FORMAT.md          # Especificación del formato binario .vx3
 ├── sprx/                      # Código fuente del plugin nativo C++ (.sprx)
 │   ├── Makefile               # Script de compilación PSL1GHT / ps3dev
@@ -63,32 +98,17 @@ Voxel3D-PS3/
 
 ---
 
-## 4. Fases de Desarrollo
+## 🛠️ Requisitos y Herramientas
 
-1. **Ingeniería Inversa:**
-   * Análisis estático y dinámico del `EBOOT.BIN` de Minecraft PS3.
-   * Localización de `ItemRenderer::renderItemInFirstPerson`, matrices de proyección/modelo y matrices de transformación del brazo.
-2. **Scaffold del Hook C++:**
-   * Configuración de plugin dinámico `.sprx` utilizando el toolchain `PSL1GHT` / `ps3dev`.
-   * Intercepción limpia de funciones del PPU sin romper la sincronización del hilo principal.
-3. **Pipeline de Mallas (.vx3):**
-   * Definición del formato binario compacto (`.vx3`) con vértices comprimidos.
-   * Script offline para exportar desde MagicaVoxel / Blockbench eliminando oclusión interna.
-4. **Renderizado RSX de Bajo Nivel:**
-   * Inicialización de buffers estáticos en VRAM local mediante libgcm (`cellGcmSetDrawIndexArray`).
-   * Aplicación de transformaciones matriciales (rotación, traslación, retroceso lerp).
+* **Toolchain de Compilación:** `PSL1GHT v2` / `ps3dev` (`ppu-lv2-gcc`)
+* **Desensamblador / Decompilador:** Ghidra (con procesador PowerPC 64/32) o IDA Pro
+* **Entorno de Prueba:** 
+  * PlayStation 3 con Custom Firmware (CFW Evilnat 4.90/4.91 CEX/DEX o PS3HEN)
+  * Emulador **RPCS3** con GDB server habilitado y RenderDoc (backend Vulkan)
+* **Python 3.10+** (para herramientas del pipeline offline de modelos)
 
 ---
 
-## 5. Requisitos y Herramientas
+## 📜 Licencia
 
-* **Toolchain de Compilación:** `ps3dev` / `PSL1GHT`
-* **Desensamblador:** Ghidra (con extensión PowerPC 64 / Cell PPU) o IDA Pro
-* **Entorno de Prueba:** PlayStation 3 con Custom Firmware (CFW Evilnat / DEX) o emulador RPCS3 con soporte de debugging
-* **Python 3.10+** (para herramientas del pipeline de modelos)
-
----
-
-## Licencia
-
-Proyecto de investigación educativa y desarrollo de software experimental.
+Proyecto de investigación educativa y desarrollo de software experimental de bajo nivel.
