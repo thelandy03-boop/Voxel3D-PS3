@@ -1,0 +1,21 @@
+MOD M4A1 para Minecraft PS3 (BLES01976)
+
+Copia TODO el contenido de USRDIR\voxel3d a:
+    /dev_hdd0/game/BLES01976/USRDIR/voxel3d/
+
+Quedaria asi:
+    /dev_hdd0/game/BLES01976/USRDIR/voxel3d/config.json
+    /dev_hdd0/game/BLES01976/USRDIR/voxel3d/models/m4a1.vx3
+    /dev_hdd0/game/BLES01976/USRDIR/voxel3d/voxel3d.sprx
+
+Si RPCS3 o CFW/HEN rechaza la firma del SPRX, reemplaza voxel3d.sprx por
+alternativo\voxel3d.fake.sprx (renombralo a voxel3d.sprx).
+
+La malla M4A1 ya va embebida dentro del modulo; el .vx3 y el config.json se
+incluyen para el esquema data-driven (item_id 290, metadata -1).
+
+NO modifiques el EBOOT.BIN firmado hasta validar este SPRX en RPCS3 o CFW/HEN.
+Para cargar el modulo se necesita un plugin loader o un parche que llame a
+sys_prx_load_module().
+
+Mas detalles en ..\README.md
