@@ -8,7 +8,7 @@
 [![Target](https://img.shields.io/badge/Target-Minecraft_PS3_(4J_Studios)-2ea44f?style=flat-square&logo=minecraft&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
 [![Architecture](https://img.shields.io/badge/Architecture-Cell_PPU_%7C_RSX_G70-6f42c1?style=flat-square&logo=nvidia&logoColor=white)](docs/ARCHITECTURE.md)
 [![Toolchain](https://img.shields.io/badge/Toolchain-PSL1GHT_v2_%2F_ps3dev-f39c12?style=flat-square)](docs/DEBUG_AND_TOOLCHAIN.md)
-[![Stage](https://img.shields.io/badge/Status-Fase_0:_Research-blue?style=flat-square)](docs/ROADMAP.md)
+[![Stage](https://img.shields.io/badge/Status-Planning_%26_Documentation-blue?style=flat-square)](docs/ROADMAP.md)
 
 <br/>
 
@@ -19,7 +19,7 @@
 ---
 
 ### 📊 Progreso General del Proyecto
-![](https://geps.dev/progress/8?dangerColor=800000&warningColor=ffbf00&successColor=00d26a)
+![](https://geps.dev/progress/0?dangerColor=800000&warningColor=ffbf00&successColor=00d26a)
 
 </div>
 
@@ -33,9 +33,9 @@
 
 | Fase | Componente / Hito | Barra de Progreso | % | Estado |
 | :--- | :--- | :---: | :---: | :---: |
-| **Fase 0** | Reversing de `EBOOT.BIN` & Mapeo de Offsets | `■□□□□□□□□□` | **10.0%** | 🟡 En curso |
-| **Fase 1** | Pipeline Offline (`.vox` / `.bbmodel` ➔ `.vx3`) | `■■□□□□□□□□` | **20.0%** | 🟡 En curso |
-| **Fase 2** | Scaffolding SPRX & Trampolines PPU (PPC ABI) | `■■□□□□□□□□` | **20.0%** | 🟡 En curso |
+| **Fase 0** | Reversing de `EBOOT.BIN` & Mapeo de Offsets | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
+| **Fase 1** | Pipeline Offline (`.vox` / `.bbmodel` ➔ `.vx3`) | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
+| **Fase 2** | Scaffolding SPRX & Trampolines PPU (PPC ABI) | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
 | **Fase 3** | Renderizado RSX de Bajo Nivel (`libgcm` Draw Calls) | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
 | **Fase 4** | Cinemática ADS & Retroceso Amortiguado (LERP) | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
 | **Fase 5** | Sistema Data-Driven (`config.json`) & Release v1.0 | `□□□□□□□□□□` | **0.0%** | ⚪ Pendiente |
