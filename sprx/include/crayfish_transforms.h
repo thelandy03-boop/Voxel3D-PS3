@@ -62,6 +62,8 @@ static const CrayfishPose POSE_MINI_GUN_HOLD = {
     { 91.47f, 21.91f, -1.23f }
 };
 
+static const CrayfishPose POSE_MINI_GUN_AIM = POSE_MINI_GUN_HOLD;
+
 // Array de presets disponibles para Voxel3D-PS3
 static const CrayfishWeaponPreset CRAYFISH_PRESETS[] = {
     { "pistol", POSE_PISTOL_HOLD, POSE_PISTOL_AIM, 0.8f, 18.0f },

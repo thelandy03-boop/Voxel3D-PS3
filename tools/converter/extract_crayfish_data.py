@@ -184,6 +184,10 @@ def generate_cpp_header(weapons: dict, output_path: Path):
             lines.append(f"    {{ {rot_str} }}")
             lines.append("};")
             lines.append("")
+        elif hold:
+            # Fallback for weapons without dedicated ADS animation (hipfire only)
+            lines.append(f"static const CrayfishPose POSE_{w_upper}_AIM = POSE_{w_upper}_HOLD;")
+            lines.append("")
 
     lines.append("// Array de presets disponibles para Voxel3D-PS3")
     lines.append("static const CrayfishWeaponPreset CRAYFISH_PRESETS[] = {")

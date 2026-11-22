@@ -48,16 +48,16 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 * [ ] **0.5. Validación Dinámica en RPCS3:** Breakpoint verificado al cambiar de slot de ítem en la hotbar.
 
 ### Fase 1: Pipeline Offline de Conversión de Mallas
-* [ ] **1.1. Estructura de Cabecera y Vértice:** Definición C++ de `VX3Header` y `VoxelVertex` en [`voxel3d.h`](../sprx/include/voxel3d.h).
-* [ ] **1.2. Parser de MagicaVoxel (.vox):** Script para leer archivo binario `.vox` y extraer paletas y vóxeles.
-* [~] **1.3. Scaffolding y Extracción CLI:** Herramienta de transpilación en [`tools/converter/extract_crayfish_data.py`](../tools/converter/extract_crayfish_data.py).
-* [ ] **1.4. Algoritmo Greedy Meshing:** Eliminación de caras internas ocultas y fusión de polígonos.
-* [ ] **1.5. Empaquetador Binario (.vx3):** Generación de archivo final con alineación de 128 bytes para RSX.
+* [x] **1.1. Estructura de Cabecera y Vértice:** Definición C++ de `VX3Header` y `VoxelVertex` en [`voxel3d.h`](../sprx/include/voxel3d.h).
+* [x] **1.2. Parser de MagicaVoxel (.vox):** Script para leer archivo binario `.vox` y extraer paletas y vóxeles.
+* [x] **1.3. Scaffolding y Extracción CLI:** Herramienta de transpilación en [`tools/converter/extract_crayfish_data.py`](../tools/converter/extract_crayfish_data.py).
+* [x] **1.4. Algoritmo Greedy Meshing:** Eliminación de caras internas ocultas y fusión de polígonos.
+* [x] **1.5. Empaquetador Binario (.vx3):** Generación de archivo final con alineación de 128 bytes para RSX.
 
 ### Fase 2: Scaffolding del Plugin SPRX y Hook Seguro
-* [ ] **2.1. Build System PSL1GHT:** `Makefile` inicial configurado con flags de compilación para Cell PPU.
-* [ ] **2.2. Esqueleto del Módulo PRX:** Entry points `voxel3d_prx_start` y `voxel3d_prx_stop` en [`main.cpp`](../sprx/src/main.cpp).
-* [ ] **2.3. Inyector de Trampolín PPU:** Implementación en C++ de parcheo de memoria con `sys_dbg_write_process_memory`.
+* [x] **2.1. Build System PSL1GHT:** `Makefile` inicial configurado con flags de compilación para Cell PPU.
+* [x] **2.2. Esqueleto del Módulo PRX:** Entry points `voxel3d_prx_start` y `voxel3d_prx_stop` en [`main.cpp`](../sprx/src/main.cpp).
+* [x] **2.3. Inyector de Trampolín PPU:** Implementación en C++ de parcheo de memoria con `sys_dbg_write_process_memory`.
 * [ ] **2.4. Telemetría UDP en Tiempo Real:** Integración del cliente NetLogger en el plugin para envío de logs.
 * [ ] **2.5. Inyección Limpia en Runtime:** Prueba de intercepción en RPCS3 sin congelar el hilo principal.
 
