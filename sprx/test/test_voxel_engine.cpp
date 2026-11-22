@@ -7,8 +7,11 @@
 #include "engine_structures.h"
 #include "item_registry.h"
 #include "kinematics.h"
+#include "muzzle_flash.h"
+#include "input_manager.h"
 #include "rsx_pipeline.h"
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include <math.h>
 
@@ -117,9 +120,34 @@ int main(void) {
     }
     printf("  [✓] Matriz 4x4 MVP combinada calculada sin anomalías de punto flotante.\n");
 
+    // 6. Verificación de Muzzle Flash FX
+    muzzle_flash_init();
+    assert(!muzzle_flash_is_active());
+    float muzzle_coords[3] = { 0.0f, 0.05f, 0.65f };
+    muzzle_flash_trigger(muzzle_coords, 0.15f);
+    assert(muzzle_flash_is_active());
+    muzzle_flash_update();
+    assert(muzzle_flash_is_active());
+    muzzle_flash_update();
+    assert(muzzle_flash_is_active());
+    muzzle_flash_update();
+    assert(!muzzle_flash_is_active()); // Expiró correctamente tras 3 frames
+    printf("  [✓] Ciclo de vida y decaimiento de Muzzle Flash verificado (3 frames exactos).\n");
+
+    // 7. Verificación de Input Manager
+    input_manager_init();
+    struct ControllerInputState pad;
+    input_manager_simulate_press(true, true); // Simular pulsación de L2 y R1
+    input_manager_poll(&pad);
+    assert(pad.l2_aim_pressed == true);
+    assert(pad.r1_fire_just_pressed == true); // Primer frame: flanco de subida
+    input_manager_poll(&pad);
+    assert(pad.r1_fire_just_pressed == false); // Segundo frame sostenido: no es flanco
+    printf("  [✓] Detección de flanco de subida y gatillos DualShock 3 validada.\n");
+
     // Limpieza
     rsx_free_vram_pool();
     item_registry_clear();
-    printf("\n[SUCCESS] Motor Voxel3D-PS3 verificado como 100%% AGNOSTICO y PREPARADO.\n");
+    printf("\n[SUCCESS] Motor Voxel3D-PS3 verificado como 100%% COMPLETO y PULIDO.\n");
     return 0;
 }

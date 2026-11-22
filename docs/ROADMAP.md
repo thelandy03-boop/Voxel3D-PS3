@@ -73,7 +73,7 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 * [x] **4.2. Detección de Controles (L2):** Detección del estado de apuntado en el mando DualShock 3.
 * [x] **4.3. Interpolación de Apuntado ADS:** Traslación hacia el centro de la pantalla y multiplicador dinámico de FOV.
 * [x] **4.4. Impulso y Recuperación de Retroceso:** Física de retroceso instantáneo y decaimiento exponencial en runtime.
-* [ ] **4.5. Efecto Visual de Muzzle Flash:** Renderizado del destello de disparo en las coordenadas del cañón.
+* [x] **4.5. Efecto Visual de Muzzle Flash:** Renderizado del destello de disparo en las coordenadas del cañón.
 
 ### Fase 5: Sistema Data-Driven y Release v1.0
 * [x] **5.1. Generación de Presets y Configuración:** Transpilación de matrices de MrCrayfish hacia [`crayfish_config.json`](../models/crayfish_config.json) y [`crayfish_transforms.h`](../sprx/include/crayfish_transforms.h).

@@ -1,7 +1,8 @@
 /**
  * Voxel3D-PS3: Plugin SPRX para Minecraft PlayStation 3 Edition
  * Motor agnóstico de renderizado 3D data-driven con resolución O(1),
- * cinemática ADS, físicas de retroceso y emisión directa en la GPU RSX.
+ * sondeo de DualShock 3 (L2 ADS / R1 Disparo), cinemática LERP,
+ * Muzzle Flash y emisión de bajo nivel en la GPU RSX.
  */
 
 #include "voxel3d.h"
@@ -11,6 +12,9 @@
 #include "engine_structures.h"
 #include "item_registry.h"
 #include "kinematics.h"
+#include "muzzle_flash.h"
+#include "input_manager.h"
+#include "config_loader.h"
 #include "crayfish_transforms.h"
 #include <stdint.h>
 #include <string.h>
@@ -58,20 +62,37 @@ void hook_renderItemInFirstPerson(ItemRenderer* itemRendererInstance, float part
             const struct RegisteredVoxelItem* voxel_item = item_registry_find(item_id, metadata);
 
             if (voxel_item && g_gcm_context) {
-                // 3. Actualizar cinemática LERP (ADS y recuperación de retroceso)
-                kinematics_update(&g_player_weapon_state, voxel_item, 1.0f / 60.0f);
+                // 3. Sondeo de controles DualShock 3
+                struct ControllerInputState pad;
+                input_manager_poll(&pad);
+                g_player_weapon_state.l2_aim_pressed = pad.l2_aim_pressed;
 
-                // 4. Construir matriz combinada para el RSX
+                // Detección de disparo y retroceso
+                if (pad.r1_fire_just_pressed) {
+                    kinematics_apply_recoil(&g_player_weapon_state, voxel_item);
+                    muzzle_flash_trigger(nullptr, 0.15f);
+                }
+
+                // 4. Actualizar cinemáticas (SmoothStep ADS y amortiguación de retroceso)
+                kinematics_update(&g_player_weapon_state, voxel_item, 1.0f / 60.0f);
+                muzzle_flash_update();
+
+                // 5. Construir matriz combinada para el RSX
                 float mvp_matrix[16];
                 kinematics_build_matrix(&g_player_weapon_state, voxel_item, mvp_matrix);
 
-                // 5. Emitir Draw Call RSX de bajo nivel
+                // 6. Emitir Draw Call RSX de bajo nivel para la malla vóxel
                 voxel_model_drawn = rsx_draw_voxel_model(g_gcm_context, voxel_item->model_id, mvp_matrix);
+
+                // 7. Renderizar destello de disparo en la boca del cañón si está activo
+                if (voxel_model_drawn && muzzle_flash_is_active()) {
+                    muzzle_flash_render(g_gcm_context, mvp_matrix);
+                }
             }
         }
     }
 
-    // 6. Si no es un modelo vóxel 3D o falló el render, fallback limpio al renderizador 2D original
+    // 8. Fallback limpio al renderizador 2D original si no es un modelo vóxel 3D
     if (!voxel_model_drawn && originalFunc) {
         originalFunc(itemRendererInstance, partialTicks);
     }
@@ -84,9 +105,11 @@ extern "C" {
         netlog_init("127.0.0.1", 3000);
         netlog_info("Inicializando Voxel3D-PS3 Universal Engine...");
 
-        // 1. Inicializar tabla de búsqueda O(1) en memoria XDR
+        // 1. Inicializar subsistemas
         item_registry_init();
         kinematics_init(&g_player_weapon_state);
+        input_manager_init();
+        muzzle_flash_init();
 
         // 2. Inicializar el pool estático de 4 MB en memoria GDDR3 del RSX
         if (!rsx_init_vram_pool()) {
@@ -94,36 +117,8 @@ extern "C" {
             return -1;
         }
 
-        // 3. Registrar preset de armas iniciales (Agnósticas a la fuente)
-        struct RegisteredVoxelItem pistol_item;
-        memset(&pistol_item, 0, sizeof(pistol_item));
-        pistol_item.item_id = 290; // Wooden Hoe / Voxel Pistol
-        pistol_item.metadata = 0;
-        pistol_item.model_id = 1;
-        strncpy(pistol_item.name, "Voxel 3D Pistol", sizeof(pistol_item.name) - 1);
-        pistol_item.scale[0] = 0.0625f; pistol_item.scale[1] = 0.0625f; pistol_item.scale[2] = 0.0625f;
-        pistol_item.rest_pos[0] = 0.25f; pistol_item.rest_pos[1] = -0.20f; pistol_item.rest_pos[2] = 0.45f;
-        pistol_item.ads_pos[0] = 0.0f; pistol_item.ads_pos[1] = -0.14f; pistol_item.ads_pos[2] = 0.28f;
-        pistol_item.ads_fov_mult = 0.80f;
-        pistol_item.recoil_kick_pos[1] = 0.02f; pistol_item.recoil_kick_pos[2] = -0.06f;
-        pistol_item.recoil_kick_rot[0] = 8.0f;
-        pistol_item.recoil_recovery_speed = 18.0f;
-        item_registry_register(&pistol_item);
-
-        struct RegisteredVoxelItem rifle_item;
-        memset(&rifle_item, 0, sizeof(rifle_item));
-        rifle_item.item_id = 291; // Stone Hoe / Voxel Rifle
-        rifle_item.metadata = 0;
-        rifle_item.model_id = 2;
-        strncpy(rifle_item.name, "Voxel 3D Rifle", sizeof(rifle_item.name) - 1);
-        rifle_item.scale[0] = 0.0625f; rifle_item.scale[1] = 0.0625f; rifle_item.scale[2] = 0.0625f;
-        rifle_item.rest_pos[0] = 0.20f; rifle_item.rest_pos[1] = -0.22f; rifle_item.rest_pos[2] = 0.40f;
-        rifle_item.ads_pos[0] = 0.0f; rifle_item.ads_pos[1] = -0.12f; rifle_item.ads_pos[2] = 0.25f;
-        rifle_item.ads_fov_mult = 0.70f;
-        rifle_item.recoil_kick_pos[1] = 0.03f; rifle_item.recoil_kick_pos[2] = -0.09f;
-        rifle_item.recoil_kick_rot[0] = 12.0f;
-        rifle_item.recoil_recovery_speed = 14.0f;
-        item_registry_register(&rifle_item);
+        // 3. Cargar configuración data-driven y mallas .vx3
+        config_loader_load_all(nullptr);
 
         // 4. Instalar hook de intercepción PPU
         bool success = install_ppu_hook(
