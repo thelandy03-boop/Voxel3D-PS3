@@ -23,6 +23,10 @@
 
 </div>
 
+<p align="center">
+  <img src="docs/status.svg" alt="Voxel3D-PS3 Architecture and Roadmap Status Treemap" width="100%"/>
+</p>
+
 ---
 
 ### 📌 Estado de los Hitos (Milestones)
