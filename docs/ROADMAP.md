@@ -2,6 +2,31 @@
 
 Este documento define las etapas de desarrollo, hitos de ingeniería (*milestones*), criterios de aceptación y matriz de mitigación de riesgos para llevar el proyecto desde la fase de investigación hasta una versión estable en producción.
 
+> [!NOTE]
+> **Instrucciones para Desarrolladores y Agentes de IA:**
+> El estado y los gráficos de progreso de este proyecto son **100% dinámicos y reales**. Se extraen automáticamente de este archivo.
+> Para modificar un porcentaje o estado de un componente:
+> 1. Cambia la casilla correspondiente en este archivo:
+>    * `* [x]` : Tarea completada y verificada (**verde** / `done`).
+>    * `* [~]` : Tarea iniciada / en progreso activo (**amarillo** / `started`).
+>    * `* [ ]` : Tarea pendiente (**gris** / `to do`).
+> 2. Ejecuta el comando: `python3 tools/generate_status_svg.py`
+> 3. El script regenera `docs/status.svg` y recalcula los porcentajes exactos sin datos ficticios.
+
+---
+
+## 0. Especificaciones Técnicas y Arquitectura
+
+* [x] **0.A. Arquitectura del Sistema:** Especificación del hook y ciclo GCM en [`ARCHITECTURE.md`](ARCHITECTURE.md).
+* [x] **0.B. Formato Binario VX3:** Estructura de vértice comprimido de 12 bytes en [`VX3_FORMAT.md`](VX3_FORMAT.md).
+* [x] **0.C. Pipeline Gráfico RSX:** Gestión de contexto GCM, FIFO y shaders en [`RSX_PIPELINE.md`](RSX_PIPELINE.md).
+* [x] **0.D. Presupuestos de Memoria:** Alocación estática en VRAM GDDR3 y XDR en [`MEMORY_MANAGEMENT.md`](MEMORY_MANAGEMENT.md).
+* [x] **0.E. Hooking PPU Cell:** Trampolines absolutos de 16 bytes y flush de caché en [`PPU_HOOKING.md`](PPU_HOOKING.md).
+* [x] **0.F. Estructuras C++ 4J:** Mapeo de `ItemStack`, `ItemRenderer` y matrices en [`ENGINE_STRUCTURES.md`](ENGINE_STRUCTURES.md).
+* [x] **0.G. Configuración Data-Driven:** Esquema JSON para armas y retroceso en [`CONFIG_SPEC.md`](CONFIG_SPEC.md).
+* [x] **0.H. Toolchain y Telemetría:** Configuración PSL1GHT, RPCS3 y NetLogger UDP en [`DEBUG_AND_TOOLCHAIN.md`](DEBUG_AND_TOOLCHAIN.md).
+* [x] **0.I. Metodología de Reversing:** Guía para análisis en Ghidra/IDA Pro en [`REVERSE_ENGINEERING.md`](REVERSE_ENGINEERING.md).
+
 ---
 
 ## Resumen de Hitos (Milestone Timeline)
@@ -21,7 +46,7 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 ## Fase 0: Ingeniería Inversa y Mapeo de Memoria (Mes 1)
 **Objetivo:** Obtener los puntos de intercepción exactos y validar las estructuras del motor en el ejecutable desprotegido.
 
-* [ ] **0.1. Preparación de Binarios:**
+* [~] **0.1. Preparación de Binarios:**
   * Descifrado de `EBOOT.BIN` para versiones BLES01976 y NPUB31419 (actualización 1.84).
   * Extracción del `EBOOT.ELF` y descompresión de secciones de código.
 * [ ] **0.2. Análisis Estático en Ghidra / IDA Pro:**
@@ -55,7 +80,7 @@ Este documento define las etapas de desarrollo, hitos de ingeniería (*milestone
 ## Fase 2: Scaffolding del Plugin SPRX y Hook Seguro (Mes 3)
 **Objetivo:** Crear el esqueleto funcional del módulo `.sprx` capaz de inyectar trampolines en la PPU sin alterar la estabilidad del juego.
 
-* [ ] **2.1. Toolchain y Build System:**
+* [~] **2.1. Toolchain y Build System:**
   * Configuración del `Makefile` bajo `PSL1GHT v2` y generación limpia del archivo `Voxel3D-PS3.sprx`.
   * Implementación de funciones de ciclo de vida del módulo (`sys_prx_start` y `sys_prx_stop`).
 * [ ] **2.2. Motor de Trampolines PowerPC:**

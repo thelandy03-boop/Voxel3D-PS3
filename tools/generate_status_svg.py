@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
 """
-Voxel3D-PS3 Status SVG Generator
-Generates a treemap visual status chart (docs/status.svg) similar to Pro-Wave,
-tracking project subsystems and ROADMAP.md milestone items.
+Voxel3D-PS3 Status SVG & Metrics Generator
+Dynamically parses docs/ROADMAP.md checkboxes to generate docs/status.svg.
+
+How to update:
+Any developer or AI simply edits docs/ROADMAP.md:
+  * [x] -> Completed / Done (green)
+  * [~] -> Started / In progress (yellow)
+  * [ ] -> Pending / To do (dark grey)
+Then run:
+  python3 tools/generate_status_svg.py
 """
 
 import math
+import re
 from pathlib import Path
 
+ROADMAP_PATH = Path("docs/ROADMAP.md")
 SVG_PATH = Path("docs/status.svg")
+README_PATH = Path("README.md")
 
 WIDTH = 1060.0
 HEIGHT = 520.0
@@ -33,7 +43,6 @@ class Rect:
 
 class Group:
     def __init__(self, name: str, items: list[str]):
-        # items can be 'done', 'partial', 'todo'
         self.name = name
         self.items = items
 
@@ -98,7 +107,6 @@ def fitted_name(name: str, width: float) -> str:
 
 
 def draw_group(svg: list[str], area: Rect, group: Group):
-    # Sort items: done first, partial second, todo last
     order = {"done": 0, "partial": 1, "todo": 2}
     sorted_items = sorted(group.items, key=lambda s: order.get(s, 2))
     n = len(sorted_items)
@@ -123,12 +131,10 @@ def draw_group(svg: list[str], area: Rect, group: Group):
                 f'fill="{fill}" stroke="{GRID_STROKE}" stroke-opacity=".55" stroke-width=".6"/>'
             )
 
-    # Border
     svg.append(
         f'<rect x="{area.x:.1f}" y="{area.y:.1f}" width="{area.w:.1f}" height="{area.h:.1f}" '
         f'fill="none" stroke="{BORDER_COLOR}" stroke-width="2"/>'
     )
-    # Label
     label = escape_xml(fitted_name(group.name, area.w - 10.0))
     svg.append(
         f'<text x="{area.x + 5.0:.1f}" y="{area.y + 14.0:.1f}" font-size="12" font-weight="600" '
@@ -159,7 +165,7 @@ def draw_chart(svg: list[str], area: Rect, title: str, groups: list[Group]):
 def draw_badge(svg: list[str], x: float, label: str, val: float) -> float:
     lw = len(label) * 7.2 + 18.0
     vw = 66.0
-    color = DONE_COLOR if val >= 75.0 else (PARTIAL_COLOR if val >= 35.0 else "#c0392b")
+    color = DONE_COLOR if val >= 75.0 else (PARTIAL_COLOR if val >= 30.0 else "#c0392b")
 
     svg.append(f'<rect x="{x:.1f}" y="16" width="{lw:.1f}" height="24" rx="4" fill="#555b63"/>')
     svg.append(f'<rect x="{x + lw:.1f}" y="16" width="{vw:.1f}" height="24" rx="4" fill="{color}"/>')
@@ -172,62 +178,141 @@ def draw_badge(svg: list[str], x: float, label: str, val: float) -> float:
     return x + lw + vw + 14.0
 
 
-def generate_status_svg():
-    # Define Subsystems Groups
-    subsystems = [
-        Group(
-            "1 Reversing EBOOT",
-            ["done", "done", "done", "partial", "partial", "todo"],
-        ),
-        Group(
-            "2 Converter .vx3",
-            ["done", "done", "done", "done", "partial", "todo"],
-        ),
-        Group(
-            "3 SPRX Hooking",
-            ["done", "done", "partial", "partial", "todo", "todo"],
-        ),
-        Group(
-            "4 RSX libgcm",
-            ["done", "partial", "todo", "todo", "todo", "todo", "todo"],
-        ),
-        Group(
-            "5 Kinematics & Recoil",
-            ["done", "partial", "todo", "todo", "todo"],
-        ),
-        Group(
-            "6 Config & FX",
-            ["done", "done", "partial", "todo", "todo"],
-        ),
-    ]
+def parse_roadmap() -> tuple[list[Group], list[Group]]:
+    """
+    Parses docs/ROADMAP.md directly.
+    Returns (spec_groups, phase_groups) based on real checkboxes.
+    """
+    if not ROADMAP_PATH.exists():
+        raise FileNotFoundError(f"Cannot find {ROADMAP_PATH}")
 
-    # Define Roadmap Groups (Mapped from ROADMAP.md)
-    roadmap = [
-        Group(
-            "0 Foundation & Reversing",
-            ["done", "done", "partial", "partial"],
-        ),
-        Group(
-            "1 Mesh Pipeline (.vx3)",
-            ["done", "done", "partial", "partial"],
-        ),
-        Group(
-            "2 Hook & Trampoline",
-            ["done", "partial", "todo", "todo"],
-        ),
-        Group(
-            "3 RSX Render (libgcm)",
-            ["partial", "todo", "todo", "todo"],
-        ),
-        Group(
-            "4 ADS & Recoil LERP",
-            ["todo", "todo", "todo", "todo"],
-        ),
-        Group(
-            "5 Config & Release v1.0",
-            ["partial", "todo", "todo", "todo"],
-        ),
-    ]
+    content = ROADMAP_PATH.read_text(encoding="utf-8")
+    lines = content.splitlines()
+
+    spec_groups: list[Group] = []
+    phase_groups: list[Group] = []
+
+    current_group_name = None
+    current_items: list[str] = []
+    is_spec = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Detect section header
+        if stripped.startswith("## "):
+            # Save previous group
+            if current_group_name and current_items:
+                g = Group(current_group_name, current_items)
+                if is_spec:
+                    spec_groups.append(g)
+                else:
+                    phase_groups.append(g)
+                current_items = []
+
+            header_title = stripped[3:].strip()
+            # Clean header name
+            clean_title = re.sub(r"\(.*?\)", "", header_title).strip()
+            clean_title = clean_title.split(":")[0].strip()
+
+            if "Especificaciones" in header_title or "0. " in header_title:
+                is_spec = True
+                current_group_name = "Specs & Docs"
+            elif "Fase " in header_title:
+                is_spec = False
+                current_group_name = clean_title
+            else:
+                current_group_name = None
+
+        # Check for task checkboxes
+        if current_group_name:
+            if stripped.startswith(("* [x]", "- [x]")):
+                current_items.append("done")
+            elif stripped.startswith(("* [~]", "- [~]")):
+                current_items.append("partial")
+            elif stripped.startswith(("* [ ]", "- [ ]")):
+                current_items.append("todo")
+
+    # Flush last group
+    if current_group_name and current_items:
+        g = Group(current_group_name, current_items)
+        if is_spec:
+            spec_groups.append(g)
+        else:
+            phase_groups.append(g)
+
+    # If spec_groups is a single group with 9 items, split it logically for the treemap
+    if spec_groups and len(spec_groups) == 1 and len(spec_groups[0].items) >= 4:
+        all_specs = spec_groups[0].items
+        spec_groups = [
+            Group("Core Architecture", all_specs[:3]),
+            Group("RSX & Memory Specs", all_specs[3:6]),
+            Group("Toolchain & Reversing", all_specs[6:]),
+        ]
+
+    return spec_groups, phase_groups
+
+
+def update_readme_milestones(phase_groups: list[Group]):
+    """Keeps the README.md table and general progress in sync with real numbers."""
+    if not README_PATH.exists():
+        return
+
+    content = README_PATH.read_text(encoding="utf-8")
+
+    # Calculate overall roadmap percentage
+    overall_pct = percent(phase_groups)
+
+    # Update badge URL in README.md
+    content = re.sub(
+        r"https://geps\.dev/progress/\d+",
+        f"https://geps.dev/progress/{int(round(overall_pct))}",
+        content,
+    )
+
+    # Format each phase row
+    # Example: | **Fase 0** | Reversing de `EBOOT.BIN` ... | `■■■■■■■■□□` | **80%** | 🟡 En curso |
+    phase_meta = {
+        "Fase 0": ("Reversing de `EBOOT.BIN` & Mapeo de Offsets", phase_groups[0] if len(phase_groups) > 0 else None),
+        "Fase 1": ("Pipeline Offline (`.vox` / `.bbmodel` ➔ `.vx3`)", phase_groups[1] if len(phase_groups) > 1 else None),
+        "Fase 2": ("Scaffolding SPRX & Trampolines PPU (PPC ABI)", phase_groups[2] if len(phase_groups) > 2 else None),
+        "Fase 3": ("Renderizado RSX de Bajo Nivel (`libgcm` Draw Calls)", phase_groups[3] if len(phase_groups) > 3 else None),
+        "Fase 4": ("Cinemática ADS & Retroceso Amortiguado (LERP)", phase_groups[4] if len(phase_groups) > 4 else None),
+        "Fase 5": ("Sistema Data-Driven (`config.json`) & Release v1.0", phase_groups[5] if len(phase_groups) > 5 else None),
+    }
+
+    new_rows = []
+    for phase_key, (desc, group) in phase_meta.items():
+        if group:
+            p = percent([group])
+            # 10 blocks
+            blocks_filled = int(round(p / 10.0))
+            blocks = "■" * blocks_filled + "□" * (10 - blocks_filled)
+            if p >= 100.0:
+                status_pill = "🟢 Completado"
+            elif p > 0.0:
+                status_pill = "🟡 En curso"
+            else:
+                status_pill = "⚪ Pendiente"
+            new_rows.append(f"| **{phase_key}** | {desc} | `{blocks}` | **{p:.1f}%** | {status_pill} |")
+
+    table_block = "\n".join(new_rows)
+    pattern = r"(\| \*\*Fase 0\*\* \|[\s\S]*?\| \*\*Fase 5\*\* \|[^\n]*\n)"
+    content = re.sub(pattern, table_block + "\n", content)
+
+    README_PATH.write_text(content, encoding="utf-8")
+    print(f"Updated {README_PATH} milestone table with real metrics ({overall_pct:.1f}% total).")
+
+
+def generate_status():
+    spec_groups, phase_groups = parse_roadmap()
+
+    spec_pct = percent(spec_groups)
+    roadmap_pct = percent(phase_groups)
+
+    print(f"Parsed REAL metrics from {ROADMAP_PATH}:")
+    print(f" - Specifications: {spec_pct:.1f}% ({counted_items(spec_groups, 'done')}/{total_items(spec_groups)})")
+    print(f" - Roadmap phases: {roadmap_pct:.1f}% ({counted_items(phase_groups, 'done')}/{total_items(phase_groups)})")
 
     svg_parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {HEIGHT}" width="{WIDTH}" height="{HEIGHT}" '
@@ -237,8 +322,8 @@ def generate_status_svg():
 
     # Header Badges
     x = MARGIN
-    x = draw_badge(svg_parts, x, "subsystems", percent(subsystems))
-    draw_badge(svg_parts, x, "roadmap", percent(roadmap))
+    x = draw_badge(svg_parts, x, "specifications", spec_pct)
+    draw_badge(svg_parts, x, "roadmap", roadmap_pct)
 
     # Two Charts Layout (Side by side)
     chart_w = (WIDTH - 3.0 * MARGIN) / 2.0
@@ -247,8 +332,8 @@ def generate_status_svg():
     chart1_area = Rect(MARGIN, CHART_TOP, chart_w, chart_h)
     chart2_area = Rect(MARGIN * 2.0 + chart_w, CHART_TOP, chart_w, chart_h)
 
-    draw_chart(svg_parts, chart1_area, "Subsystem modules", subsystems)
-    draw_chart(svg_parts, chart2_area, "Roadmap items", roadmap)
+    draw_chart(svg_parts, chart1_area, "Technical Specifications", spec_groups)
+    draw_chart(svg_parts, chart2_area, "Implementation Roadmap", phase_groups)
 
     # Legend at bottom
     leg_y = HEIGHT - 20.0
@@ -266,6 +351,8 @@ def generate_status_svg():
     SVG_PATH.write_text(content, encoding="utf-8")
     print(f"Generated {SVG_PATH} successfully!")
 
+    update_readme_milestones(phase_groups)
+
 
 if __name__ == "__main__":
-    generate_status_svg()
+    generate_status()
