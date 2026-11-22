@@ -167,8 +167,8 @@ def draw_badge(svg: list[str], x: float, label: str, val: float) -> float:
     vw = 66.0
     color = DONE_COLOR if val >= 75.0 else (PARTIAL_COLOR if val >= 30.0 else "#c0392b")
 
-    svg.append(f'<rect x="{x:.1f}" y="16" width="{lw:.1f}" height="24" rx="4" fill="#555b63"/>')
-    svg.append(f'<rect x="{x + lw:.1f}" y="16" width="{vw:.1f}" height="24" rx="4" fill="{color}"/>')
+    svg.append(f'<rect x="{x:.1f}" y="16" width="{lw:.1f}" height="24" fill="#555b63"/>')
+    svg.append(f'<rect x="{x + lw:.1f}" y="16" width="{vw:.1f}" height="24" fill="{color}"/>')
     svg.append(
         f'<text x="{x + 9.0:.1f}" y="32.5" font-size="12" font-weight="600" fill="#fff">{escape_xml(label)}</text>'
     )
@@ -317,7 +317,7 @@ def generate_status():
     svg_parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {WIDTH} {HEIGHT}" width="{WIDTH}" height="{HEIGHT}" '
         f'font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif">',
-        f'<rect width="{WIDTH}" height="{HEIGHT}" rx="10" fill="{BG_COLOR}"/>',
+        f'<rect width="{WIDTH}" height="{HEIGHT}" fill="{BG_COLOR}"/>',
     ]
 
     # Header Badges
@@ -339,7 +339,7 @@ def generate_status():
     leg_y = HEIGHT - 20.0
     leg_x = MARGIN
     for col, name in [(DONE_COLOR, "done"), (PARTIAL_COLOR, "started"), (TODO_COLOR, "to do")]:
-        svg_parts.append(f'<rect x="{leg_x}" y="{leg_y - 10}" width="12" height="12" rx="2" fill="{col}"/>')
+        svg_parts.append(f'<rect x="{leg_x}" y="{leg_y - 10}" width="12" height="12" fill="{col}"/>')
         svg_parts.append(
             f'<text x="{leg_x + 18}" y="{leg_y}" font-size="12" fill="#8b949e">{name}</text>'
         )

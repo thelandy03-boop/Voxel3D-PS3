@@ -4,11 +4,11 @@
 
 ### High-Performance 3D Voxel Item Rendering Engine for Minecraft: PlayStation 3 Edition
 
-[![Platform](https://img.shields.io/badge/Platform-PlayStation_3-003791?style=for-the-badge&logo=playstation&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
-[![Target](https://img.shields.io/badge/Target-Minecraft_PS3_(4J_Studios)-2ea44f?style=for-the-badge&logo=minecraft&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
-[![Architecture](https://img.shields.io/badge/Architecture-Cell_PPU_%7C_RSX_G70-6f42c1?style=for-the-badge&logo=nvidia&logoColor=white)](docs/ARCHITECTURE.md)
-[![Toolchain](https://img.shields.io/badge/Toolchain-PSL1GHT_v2_%2F_ps3dev-f39c12?style=for-the-badge)](docs/DEBUG_AND_TOOLCHAIN.md)
-[![Stage](https://img.shields.io/badge/Status-Fase_0:_Research-blue?style=for-the-badge)](docs/ROADMAP.md)
+[![Platform](https://img.shields.io/badge/Platform-PlayStation_3-003791?style=flat-square&logo=playstation&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
+[![Target](https://img.shields.io/badge/Target-Minecraft_PS3_(4J_Studios)-2ea44f?style=flat-square&logo=minecraft&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
+[![Architecture](https://img.shields.io/badge/Architecture-Cell_PPU_%7C_RSX_G70-6f42c1?style=flat-square&logo=nvidia&logoColor=white)](docs/ARCHITECTURE.md)
+[![Toolchain](https://img.shields.io/badge/Toolchain-PSL1GHT_v2_%2F_ps3dev-f39c12?style=flat-square)](docs/DEBUG_AND_TOOLCHAIN.md)
+[![Stage](https://img.shields.io/badge/Status-Fase_0:_Research-blue?style=flat-square)](docs/ROADMAP.md)
 
 <br/>
 
