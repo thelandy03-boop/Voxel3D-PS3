@@ -1,0 +1,48 @@
+{
+  "version": "1.4.2",
+  "ui_theme": "minecraft_modern",
+  "auto_load": true,
+  "rsx_mode": "boost",
+  "enabled_mods": [
+    {
+      "name": "TOO MANY ITEMS",
+      "version": "v1.0",
+      "enabled": true
+    },
+    {
+      "name": "X-RAY VISION",
+      "version": "v1.2",
+      "enabled": true
+    },
+    {
+      "name": "FLY MOD v2.1",
+      "version": "v2.1",
+      "enabled": true
+    },
+    {
+      "name": "DYNAMIC LIGHTS",
+      "version": "v1.4",
+      "enabled": true
+    },
+    {
+      "name": "BETTER FPS (PS3)",
+      "version": "v1.0",
+      "enabled": true
+    },
+    {
+      "name": "MINIMAP MOD v3.0",
+      "version": "v3.0",
+      "enabled": true
+    },
+    {
+      "name": "CUSTOM CAPES",
+      "version": "v1.0",
+      "enabled": false
+    },
+    {
+      "name": "VOXEL3D FIRST-PERSON",
+      "version": "v1.0",
+      "enabled": true
+    }
+  ]
+}

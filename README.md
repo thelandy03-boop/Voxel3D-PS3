@@ -1,126 +1,72 @@
-<div align="center">
+# Voxel3D-PS3: Minecraft PS3 Modding Framework & Loader
 
-# 🎮🔫 Voxel3D-PS3
-
-### High-Performance 3D Voxel Item Rendering Engine for Minecraft: PlayStation 3 Edition
-
-[![Platform](https://img.shields.io/badge/Platform-PlayStation_3-003791?style=flat-square&logo=playstation&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
-[![Target](https://img.shields.io/badge/Target-Minecraft_PS3_(4J_Studios)-2ea44f?style=flat-square&logo=minecraft&logoColor=white)](https://github.com/thelandy03-boop/Voxel3D-PS3)
-[![Architecture](https://img.shields.io/badge/Architecture-Cell_PPU_%7C_RSX_G70-6f42c1?style=flat-square&logo=nvidia&logoColor=white)](docs/ARCHITECTURE.md)
-[![Toolchain](https://img.shields.io/badge/Toolchain-PSL1GHT_v2_%2F_ps3dev-f39c12?style=flat-square)](docs/DEBUG_AND_TOOLCHAIN.md)
-[![Stage](https://img.shields.io/badge/Status-Planning_%26_Documentation-blue?style=flat-square)](docs/ROADMAP.md)
-
-<br/>
-
-**[Documentación](docs/)** • **[Arquitectura](docs/ARCHITECTURE.md)** • **[Hoja de Ruta](docs/ROADMAP.md)** • **[Pipeline RSX](docs/RSX_PIPELINE.md)** • **[PPU Hooking](docs/PPU_HOOKING.md)** • **[Formato VX3](docs/VX3_FORMAT.md)**
-
-<br/>
+**Voxel3D-PS3** es un ecosistema profesional de modding para **Minecraft: PlayStation 3 Edition (BLES01976)**. Proporciona una arquitectura nativa de alto rendimiento en C++ que permite inyectar modelos voxel en 3D, cargar módulos `.sprx` a 60 FPS sin sobrecargar los 256 MB de RAM de la consola, transpilar mods clásicos de Forge Java (`.jar`), y gestionar todo desde una aplicación Homebrew oficial basada en **Apollo Save Tool**.
 
 ---
 
-### 📊 Progreso General del Proyecto
-![](https://geps.dev/progress/90?dangerColor=800000&warningColor=ffbf00&successColor=00d26a)
-
-</div>
-
-<p align="center">
-  <img src="docs/status.svg" alt="Voxel3D-PS3 Architecture and Roadmap Status Treemap" width="100%"/>
-</p>
-
----
-
-### 📌 Estado de los Hitos (Milestones)
-
-| Fase | Componente / Hito | Barra de Progreso | % | Estado |
-| :--- | :--- | :---: | :---: | :---: |
-| **Fase 0** | Reversing de `EBOOT.BIN` & Mapeo de Offsets | `■■■■■■■■■■` | **100.0%** | 🟢 Completado |
-| **Fase 1** | Pipeline Offline (`.vox` / `.bbmodel` ➔ `.vx3`) | `■■■■■■■■■■` | **100.0%** | 🟢 Completado |
-| **Fase 2** | Scaffolding SPRX & Trampolines PPU (PPC ABI) | `■■■■■■■■■■` | **100.0%** | 🟢 Completado |
-| **Fase 3** | Renderizado RSX de Bajo Nivel (`libgcm` Draw Calls) | `■■■■■■■■■■` | **100.0%** | 🟢 Completado |
-| **Fase 4** | Cinemática ADS & Retroceso Amortiguado (LERP) | `■■■■■■■■■■` | **100.0%** | 🟢 Completado |
-| **Fase 5** | Sistema Data-Driven (`config.json`) & Release v1.0 | `■■■■□□□□□□` | **40.0%** | 🟡 En curso |
-
----
-
-## 📖 Visión General
-
-**Voxel3D-PS3** es un proyecto de investigación y desarrollo de un plugin nativo en C++ (`.sprx`) para **Minecraft: PlayStation 3 Edition** (binario nativo C++ compilado originalmente por 4J Studios).
-
-Su propósito es reemplazar el pipeline original de renderizado de ítems en primera persona (sprites planos 2D con extrusión dinámica de quads) por **mallas vóxel 3D precalculadas cargadas directamente en la VRAM local (RSX)**, emulando la estética y mecánicas de mods icónicos como *MrCrayfish's Gun Mod* sin colapsar el estrecho presupuesto de memoria y procesamiento de la consola.
-
-> [!IMPORTANT]
-> **PlayStation 3 opera con una arquitectura de memoria asimétrica (NUMA):** 256 MB XDR RAM (PPU) y 256 MB GDDR3 VRAM (RSX). Voxel3D-PS3 está diseñado bajo la premisa de **cero transferencias en caliente PPU-RSX**, manteniendo los modelos precalculados residentes en VRAM local (`CELL_GCM_LOCATION_LOCAL`).
-
----
-
-## ⚙️ Arquitectura del Pipeline de Solución
-
-```
-[ Modelo Vóxel (Blockbench / MagicaVoxel) ]
-                     │
-                     ▼ (Conversor CLI Offline - Python/C++)
-[ Archivo Plano Binario (.vx3) ]
-  • Array contiguo de vértices optimizados (12 bytes: S16 coords, UB normals, flags, UVs)
-  • Malla optimizada con culling de caras internas ocultas y greedy meshing
-  • Tamaño ultra-compacto: ~15-35 KB por modelo
-                     │
-                     ▼ (Carga en memoria PS3)
-[ Plugin Voxel3D-PS3 (.sprx) ]
-  • Alocación de VBO estático en memoria local GDDR3 RSX (dev_gcm pool de 4 MB)
-  • Hook atómico en ItemRenderer::renderItemInFirstPerson (PPU PowerPC)
-  • Detección O(1) de ID de ítem/arma personalizada
-  • Emisión de 1 solo Draw Call al RSX (cellGcmSetDrawIndexArray)
-  • Interpolación matemática (LERP) de retroceso y apuntado ADS
-```
-
----
-
-## 📂 Estructura del Repositorio
+## 🏛️ Arquitectura del Proyecto
 
 ```
 Voxel3D-PS3/
-├── README.md                  # Presentación general y estado
-├── CONTRIBUTING.md            # Guía de contribución y política de cero métricas falsas
-├── SECURITY.md                # Seguridad técnica, estabilidad y advertencias PSN
-├── docs/                      # Centro de documentación técnica
-│   ├── README.md              # Índice maestro categorizado
-│   ├── ARCHITECTURE.md        # Arquitectura del hook y ciclo de render RSX GCM
-│   ├── ASSET_PIPELINE.md      # Guía para modeladores 3D (Blockbench/MagicaVoxel)
-│   ├── COMPILATION_GUIDE.md   # Compilación en Linux con ps3dev / PSL1GHT
-│   ├── CONFIG_SPEC.md         # Formato JSON data-driven de configuración
-│   ├── DEBUG_AND_TOOLCHAIN.md # Configuración de toolchain, RPCS3 y telemetría UDP
-│   ├── ENGINE_STRUCTURES.md   # Reconstrucción de clases C++ del motor 4J Studios
-│   ├── FAQ.md                 # Preguntas frecuentes técnicas y diseño
-│   ├── MEMORY_MANAGEMENT.md   # Presupuestos de memoria VRAM/XDR y alocación
-│   ├── PPU_HOOKING.md         # Mecanismos de intercepción PPU (PowerPC ABI y cache flush)
-│   ├── REVERSE_ENGINEERING.md # Metodología de análisis de EBOOT.BIN (Ghidra/IDA)
-│   ├── ROADMAP.md             # Hoja de ruta, hitos y matriz de mitigación de riesgos
-│   ├── RSX_PIPELINE.md        # Pipeline de bajo nivel y shaders en GPU RSX (libgcm)
-│   ├── VX3_FORMAT.md          # Especificación del formato binario .vx3
-│   └── WINDOWS_SETUP.md       # Configuración para Windows (WSL2, MSYS2 y RPCS3)
-├── sprx/                      # Código fuente del plugin nativo C++ (.sprx)
-│   ├── Makefile               # Script de compilación PSL1GHT / ps3dev
-│   ├── include/               # Cabeceras (.h)
-│   └── src/                   # Implementación del hook y llamadas libgcm
-├── tools/                     # Utilidades offline (conversor de mallas vóxel)
-│   ├── converter/             # Script CLI para empaquetar modelos a .vx3
-│   └── generate_status_svg.py # Generador dinámico del treemap de estado
-└── models/                    # Modelos de prueba y especificaciones
+├── app/                  # Aplicación Homebrew de PS3 (UI de Apollo Save Tool / Lanzador de Juego)
+│   ├── data/             # Texturas nativas, fuentes TTF y sonidos
+│   ├── include/          # Cabeceras C (menu, draw, pad, etc.)
+│   ├── pkgfiles/         # ICON0.PNG, PIC1.PNG, metadatos de empaquetado
+│   ├── source/           # Código fuente C (draw.c, menu_main.c, main.c)
+│   ├── Makefile          # Compilación de EBOOT.BIN / PKG
+│   └── sfo.xml           # Configuración PARAM.SFO (Title: Minecraft PS3 Mod Loader)
+│
+├── core/                 # Motor Central Inyectable en el Juego (voxel3d.sprx)
+│   ├── include/          # Cabeceras PPU (rsx_pipeline, hook, engine_structures, etc.)
+│   ├── src/              # Implementación PPU en C++ (trampolines de salto, render RSX)
+│   ├── test/             # Pruebas unitarias de host
+│   └── Makefile          # Compilación de voxel3d.sprx
+│
+├── sdk/                  # SDK de Desarrollo de Mods para Creadores
+│   ├── include/
+│   │   └── forge/        # Capa de compatibilidad de Forge API en C++ (ForgeShim.h)
+│   └── README.md         # Guía de creación de mods
+│
+├── mods/                 # Mods y Paquetes de Contenido
+│   └── m4a1/             # Mod de referencia M4A1 3D Voxel Weapon
+│       ├── config.json   # Matrices de transformación, ADS y retroceso
+│       └── models/       # Modelo binario m4a1.vx3
+│
+├── tools/                # Herramientas de PC y Pipeline de Conversión
+│   ├── converter/        # extract_crayfish_data.py, voxel_converter.py
+│   ├── jar2sprx/         # Transpilador automático de mods Java (.jar) a C++
+│   └── packaging/        # Herramientas de empaquetado (package.conf, empaquetar.bat, PyKG)
+│
+├── docs/                 # Documentación Técnica de Ingeniería Inversa
+├── Makefile              # Makefile Maestro (compila core y app)
+└── README.md
 ```
 
 ---
 
-## 🛠️ Requisitos y Herramientas
+## 🚀 Componentes Principales
 
-* **Toolchain de Compilación:** `PSL1GHT v2` / `ps3dev` (`ppu-lv2-gcc`)
-* **Desensamblador / Decompilador:** Ghidra (con procesador PowerPC 64/32) o IDA Pro
-* **Entorno de Prueba:** 
-  * PlayStation 3 con Custom Firmware (CFW Evilnat 4.90/4.91 CEX/DEX o PS3HEN)
-  * Emulador **RPCS3** con GDB server habilitado y RenderDoc (backend Vulkan)
-* **Python 3.10+** (para herramientas del pipeline offline de modelos)
+1. **`app/` (El Mod Loader de PS3):**
+   * Corre como una aplicación nativa en el menú XMB de la consola y en RPCS3.
+   * Utiliza el motor gráfico 2D oficial de **Apollo Save Tool** de Bucanero.
+   * Permite activar o desactivar mods con el mando DualShock 3 y lanza el juego directamente con `sys_game_process_exitspawn2`.
+
+2. **`core/` (El Motor In-Game `voxel3d.sprx`):**
+   * Módulo dinámico inyectado en el proceso de Minecraft.
+   * Intercepta el bucle de renderizado en primera persona (`renderItemInFirstPerson`).
+   * Dibuja mallas de voxeles de alta fidelidad enviando llamadas de vértices e índices directamente a la GPU RSX.
+
+3. **`tools/jar2sprx/` (El Transpilador de Mods Java):**
+   * Convierte mods clásicos de Forge (`.jar`) en código C++ nativo listo para PS3 sin consumo excesivo de memoria.
 
 ---
 
-## 📜 Licencia
+## 🛠️ Requisitos de Compilación
+* **Toolchain:** PSL1GHT v2 o Sony PS3 SDK (`ppu-lv2-gcc`).
+* **Emulador de Pruebas:** RPCS3 v0.0.40+ (Windows / Linux).
+* **Consola Física:** PlayStation 3 con Custom Firmware (CFW) o PS3HEN.
 
-Proyecto de investigación educativa y desarrollo de software experimental de bajo nivel.
+---
+
+## 📄 Licencia
+Distribuido bajo los términos de la licencia MIT y las licencias de componentes de código abierto asociadas.
