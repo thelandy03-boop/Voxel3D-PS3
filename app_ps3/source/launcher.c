@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/file.h>
+#include <sys/process.h>
 #include <lv2/process.h>
 
 static const char *kCandidates[] = {
@@ -56,7 +57,7 @@ bool launcher_boot_minecraft(void) {
         target_eboot = kCandidates[0];
     }
 
-    // exitspawn2 parameters: (target_path, argv, envp, data, data_size, prio, flags)
-    sys_game_process_exitspawn2(target_eboot, NULL, NULL, NULL, 0, 1001, SYS_PROCESS_SPAWN_STACK_SIZE_1M);
+    // sysProcessExitSpawn2 parameters: (target_path, argv, envp, data, data_size, prio, flags)
+    sysProcessExitSpawn2(target_eboot, NULL, NULL, NULL, 0, 1001, SYS_PROCESS_SPAWN_STACK_SIZE_1M);
     return true;
 }

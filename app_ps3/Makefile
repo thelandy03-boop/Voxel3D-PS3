@@ -45,7 +45,7 @@ INCLUDES	:=	include
 PKGFILES	:=	$(CURDIR)/pkgfiles
 
 TITLE		:=	Minecraft PS3 Mod Loader
-APPID		:=	MCPS3MOD1
+APPID		:=	MCPS3MODS
 CONTENTID	:=	UP0001-$(APPID)_00-0000000000000000
 
 
@@ -65,7 +65,7 @@ endif
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
 LIBS	:=	-ltiny3d -lfreetype -lgcm_sys -lrsx -lsysutil -lio -lnetctl -laudioplayer -lmpg123 -logg -lspu_sound -laudio -lsysmodule -lm \
-			-lcurl -lpolarssl -lnet -lzip -lz -ldbglogger -lps3mapi -lpngdec -lpng
+			-lcurl -lpolarssl -lnet -lzip -lz -lpngdec -lpng
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -160,6 +160,11 @@ run:
 exec:
 	make clean
 	make run
+
+#---------------------------------------------------------------------------------
+eboot:	$(BUILD) $(OUTPUT).self
+	@cp $(OUTPUT).self $(PKGFILES)/USRDIR/EBOOT.BIN
+	@echo "[+] EBOOT.BIN generado exitosamente en $(PKGFILES)/USRDIR/EBOOT.BIN"
 
 #---------------------------------------------------------------------------------
 pkg:	$(BUILD) $(OUTPUT).pkg

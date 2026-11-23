@@ -110,7 +110,9 @@ void graphics_init(void) {
 void graphics_begin_frame(void) {
     tiny3d_Clear(COLOR_BG_BACKDROP, TINY3D_CLEAR_ALL);
     tiny3d_AlphaTest(1, 0, TINY3D_ALPHA_FUNC_GEQUAL);
-    tiny3d_BlendFunc(1, TINY3D_BLEND_FUNC_SRC_ALPHA | TINY3D_BLEND_FUNC_ONE_MINUS_SRC_ALPHA,
+    tiny3d_BlendFunc(1, 
+                     TINY3D_BLEND_FUNC_SRC_RGB_SRC_ALPHA | TINY3D_BLEND_FUNC_SRC_ALPHA_SRC_ALPHA,
+                     TINY3D_BLEND_FUNC_DST_RGB_ONE_MINUS_SRC_ALPHA | TINY3D_BLEND_FUNC_DST_ALPHA_ONE_MINUS_SRC_ALPHA,
                      TINY3D_BLEND_RGB_FUNC_ADD | TINY3D_BLEND_ALPHA_FUNC_ADD);
     tiny3d_Project2D();
     
